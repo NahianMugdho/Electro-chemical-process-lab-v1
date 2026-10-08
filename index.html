@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>তড়িৎ রসায়ন ল্যাব — বিশ্লেষণ, শুষ্ক কোষ, লবণ সেতু</title>
+<link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* =====================================================================
+   তড়িৎ রসায়ন ল্যাব — স্টাইল
+   ১) রং ও ভ্যারিয়েবল  ২) মূল লেআউট (ডেস্কটপ)  ৩) উপাদান  ৪) ফোন/ট্যাবলেট রেসপন্সিভ
+   ===================================================================== */
+
+/* ---- ১) রং ও থিম ভ্যারিয়েবল (ডার্ক মোডে নিচে বদলে যায়) ---- */
+:root{--navy:#0c3b46;--navy2:#14707f;--bg:#e8f1f2;--card:#fff;--ink:#16303a;--line:#cfe0e3;--acc:#e8742a;--gold:#ffd166;--mint:#5dff9a;--code:#0b1e26;
+  box-sizing:border-box;
+  /* ফোনের নচ/হোম-বারের নিচে লেখা ঢুকে না যায়, তাই safe-area ফাঁকা রাখা হয়েছে */
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+  padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0a1a1f;--card:#12272e;--ink:#e3f0f2;--line:#25444d}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Hind Siliguri","Noto Sans Bengali",system-ui,sans-serif;font-size:17px;line-height:1.6}
+
+/* ---- ২) হেডার ও ট্যাব বাটন ---- */
+header{background:linear-gradient(135deg,#0c3b46,#14707f);color:#fff;padding:20px 16px 14px;text-align:center}
+header h1{margin:0 0 2px;font-size:1.65rem}header p{margin:0 0 12px;opacity:.85}
+#tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+#tabs button{background:#ffffff1f;color:#fff;border:1px solid #ffffff55;border-radius:99px;padding:5px 16px;font-size:.95rem}
+#tabs button.on{background:#fff;color:var(--navy)}
+
+/* ---- ৩) মূল লেআউট: বাঁয়ে ছবি+নিয়ন্ত্রণ, ডানে ধাপ-ব্যাখ্যা (দুই কলাম) ---- */
+main{max-width:1180px;margin:16px auto;padding:0 14px;display:grid;grid-template-columns:minmax(300px,440px) 1fr;gap:16px}
+main>*{min-width:0} /* গ্রিডের ভেতরের বড় লেখা/টেবিল যেন পাতা চওড়া করে না ফেলে */
+.card{background:var(--card);border-radius:14px;padding:14px;border:1px solid var(--line);box-shadow:0 4px 14px #0c3b4620}
+.left{position:sticky;top:10px;align-self:start} /* ডেস্কটপে স্ক্রল করলেও ছবি আটকে থাকে */
+.how{grid-column:1/-1;padding:10px 16px}.how summary{font-weight:700;cursor:pointer;color:var(--navy2)}.how ol{margin:8px 0 4px;padding-left:22px}.how p{margin:4px 0 0}
+
+/* ---- ৪) বাম কার্ড: ইলেক্ট্রোলাইট/“নিজে করো” বাটন, ছবি, স্ট্যাটাস, পরের-ধাপ বাটন ---- */
+#ctl{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+#ctl:empty{display:none}
+#ctl button{background:#e3eef0;color:var(--navy);border:1px solid var(--line);padding:3px 10px;font-size:.85rem;border-radius:99px}
+#ctl button.on{background:var(--navy2);color:#fff}
+/* “নিজে করো” বাটন — যাতে সবার চোখে পড়ে */
+#ctl button.mine{flex-basis:100%;font-weight:800;font-size:1rem;padding:8px 12px;border:2px solid var(--acc);background:#fff0e0;color:#7a3d0c;border-radius:12px;box-shadow:0 0 0 3px #e8742a33}
+#ctl button.mine.on{background:var(--acc);color:#fff}
+/* “নিজে করো”-র ড্রপডাউন ফর্ম */
+.cust{flex-basis:100%;display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;font-size:.85rem}
+.cust label{display:flex;flex-direction:column;font-weight:600}
+.cust select{font:inherit;padding:3px 6px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+svg{width:100%;height:auto;display:block;cursor:pointer;background:linear-gradient(#f7fbfc,#eaf3f5);border-radius:10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.st{margin:8px 0 2px;border-radius:9px;padding:6px 10px;font-weight:600;font-size:.95rem;border-left:5px solid var(--acc);background:#fff0e0;color:#7a3d0c}
+.ctrl{display:flex;gap:8px;margin-top:10px}
+button{font:inherit;font-weight:600;border:0;border-radius:9px;padding:9px 14px;cursor:pointer}
+#next{flex:1;background:var(--navy);color:#fff}#next:disabled{background:#94aab0;cursor:default}
+#prev,#reset{background:#d9e8ea;color:var(--navy)}
+button:focus-visible{outline:3px solid var(--navy2);outline-offset:2px}
+.dots{display:flex;gap:5px;justify-content:center;margin-top:9px}.dots span{width:18px;height:5px;border-radius:3px;background:var(--line)}.dots span.on{background:var(--navy2)}
+.hint{font-size:.8rem;opacity:.65;text-align:center;margin-top:5px}
+
+/* ---- ৫) ডান পাশ: সামারি, ধাপ কার্ড, সমীকরণ বক্স ---- */
+.sum{background:#fff6dd;color:#4a3500;border:1px solid #f0d58a;border-radius:12px;padding:10px 14px;margin-bottom:12px}
+.step{background:var(--card);border-radius:12px;padding:12px 14px;margin-bottom:12px;border:1px solid var(--line);border-left:6px solid #a9c3c9;opacity:.6}
+.step.cur{opacity:1;border-left-color:var(--navy);box-shadow:0 4px 16px #14707f33;animation:in .5s ease} /* চলতি ধাপ উজ্জ্বল */
+@keyframes in{from{transform:translateY(10px);opacity:0}}
+.step h3{margin:0 0 6px;font-size:1.08rem}
+.step h3 b{background:var(--navy);color:#fff;border-radius:50%;display:inline-block;width:1.7em;height:1.7em;text-align:center;line-height:1.7em;margin-right:8px;font-size:.9rem}
+pre{background:var(--code);color:var(--mint);border-radius:9px;padding:10px 12px;margin:6px 0;font:500 1rem/1.75 "Hind Siliguri",ui-monospace,monospace;overflow-x:auto;white-space:pre-wrap}
+.co{border-radius:8px;padding:6px 10px;margin-top:6px;font-size:.95rem;border-left:4px solid #2f6fde;background:#e8f1ff;color:#16303a}
+.ez{margin-top:6px;background:#fff6dd;border-left:4px solid #f0b429;color:#4a3500;padding:6px 10px;border-radius:8px;font-size:.95rem} /* “সহজ কথায়” */
+.ser{margin:8px 0;font-size:.9rem}.ser b{display:block;margin-top:6px}
+.ser i{display:inline-block;font-style:normal;margin:2px;padding:0 8px;border-radius:6px;background:#e3eef0;color:#16303a}.ser i.in{background:#bfe3f0;outline:2px solid #14707f}.ser i.win{background:#ffd166;outline:2px solid #e8742a;font-weight:700}
+table{border-collapse:collapse;width:100%;font-size:.9rem}th,td{border:1px solid var(--line);padding:5px 8px;text-align:left}th{background:#d9e8ea;color:#0c3b46}
+details.ex{margin-top:12px}details.ex summary{font-weight:700;cursor:pointer}
+sub,sup{line-height:0}
+footer{text-align:center;padding:18px 14px 26px;font-size:.92rem;opacity:.75}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}} /* যাদের অ্যানিমেশন বন্ধ করা আছে */
+
+/* =====================================================================
+   ৬) রেসপন্সিভ — ট্যাবলেট ও ফোন (পর্দা ৮২০px বা তার কম)
+   ধারণা: এক কলাম। ছবি + “পরের ধাপ” বাটন (.stick) স্ক্রিনের মাথায় আটকে থাকে,
+   তাই নিচে ধাপের লেখা পড়তে পড়তেও এনিমেশন দেখা যায়।
+   ===================================================================== */
+@media(max-width:820px){
+  body{font-size:16px}
+  header{padding:14px 12px 10px}
+  header h1{font-size:1.3rem}header p{font-size:.88rem;margin-bottom:8px}
+  /* ট্যাব বাটন: এক লাইনে পাশে স্ক্রল (ছোট পর্দায় ভাঙে না) */
+  #tabs{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;gap:6px;padding-bottom:4px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  #tabs::-webkit-scrollbar{display:none}
+  #tabs button{flex:0 0 auto;white-space:nowrap;min-height:40px;padding:6px 14px;font-size:.9rem}
+  main{grid-template-columns:1fr;gap:12px;padding:0 10px;margin:10px auto}
+  /* .left কার্ডটি “অদৃশ্য মোড়ক” হয়ে যায়, যাতে ভেতরের .stick পুরো পাতায় আটকে থাকতে পারে */
+  .left{display:contents}
+  #ctl:not(:empty){background:var(--card);border:1px solid var(--line);border-radius:14px;padding:10px}
+  #ctl button{min-height:40px;padding:6px 12px;font-size:.88rem}
+  #ctl button.mine{min-height:46px;font-size:.95rem}
+  /* ড্রপডাউন: ফোনে জুম এড়াতে ১৬px, আর আঙুলে চাপার মতো বড় */
+  .cust{gap:8px}.cust label{flex:1 1 140px;font-size:.82rem}
+  .cust select{font-size:16px;min-height:42px;width:100%}
+  /* আটকে-থাকা ছবি+নিয়ন্ত্রণ ব্লক */
+  .stick{position:sticky;top:0;z-index:20;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px;box-shadow:0 6px 16px #0c3b4633}
+  .stick svg{max-height:34vh;margin:0 auto} /* ছবি পর্দার এক-তৃতীয়াংশের বেশি জায়গা নেয় না */
+  .st{font-size:.85rem;padding:4px 8px;margin:6px 0 0}
+  .ctrl{margin-top:8px}
+  .ctrl button{min-height:46px;font-size:1rem}   /* বড় “পরের ধাপ” বাটন — বুড়ো আঙুলের জন্য */
+  #prev,#reset{padding:0 16px}
+  .dots{margin-top:6px}.dots span{width:14px}
+  .hint{display:none}                            /* কীবোর্ডের টিপ ফোনে অপ্রয়োজনীয় */
+  /* ধাপে স্ক্রল করলে আটকে-থাকা ব্লকের নিচে যেন লুকিয়ে না যায় (--stick-h জাভাস্ক্রিপ্ট থেকে আসে) */
+  .step{scroll-margin-top:calc(var(--stick-h,0px) + 10px);padding:10px 12px}
+  pre{font-size:.92rem;padding:8px 10px}
+  .step h3{font-size:1rem}
+  /* টেবিল চওড়া হলে পাশে স্ক্রল করা যাবে, পাতা ভাঙবে না */
+  table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .how{padding:8px 12px}
+  .how summary{min-height:36px;display:flex;align-items:center}
+}
+/* ছোট ফোন (৪৮০px বা কম) */
+@media(max-width:480px){
+  header h1{font-size:1.15rem}
+  .step h3 b{width:1.5em;height:1.5em;line-height:1.5em;margin-right:6px}
+  .ser i{padding:0 6px;font-size:.85rem}
+  th,td{padding:4px 6px;font-size:.82rem}
+}
+/* ফোন আড়াআড়ি ধরলে (উচ্চতা কম): আটকে-থাকা ব্লক বেশি জায়গা নেবে, তাই বন্ধ */
+@media(max-width:900px) and (max-height:520px){
+  .stick{position:static}
+  .stick svg{max-height:60vh}
+  .step{scroll-margin-top:10px}
+}
+</style>
+</head>
+<body>
+<!-- ===== হেডার: শিরোনাম + তিনটি ট্যাব বাটন (#tabs জাভাস্ক্রিপ্ট দিয়ে ভরা হয়) ===== -->
+<header><h1>তড়িৎ রসায়ন ল্যাব</h1><p>অধ্যায় ৮ · রসায়ন ও শক্তি — প্রতিটি ধাপে ক্লিক করে দেখো কী ঘটছে</p><div id="tabs"></div></header>
+<!-- ===== মূল অংশ: ব্যবহারের নিয়ম, বাম কার্ড (ছবি), ডান অংশ (ধাপ-ব্যাখ্যা) ===== -->
+<main>
+<details class="card how" open><summary>কিভাবে এই সাইট ব্যবহার করবে?</summary>
+<p style="background:#fff0e0;border:2px solid #e8742a;border-radius:10px;padding:6px 12px;margin:8px 0;color:#7a3d0c"><b>★ নিজে করো (সবচেয়ে কাজের):</b> <b>তড়িৎ বিশ্লেষণ</b> ট্যাবে ছবির ওপরের কমলা <b>“✏️ নিজে করো”</b> বাটন চাপো। তারপর যেকোনো ক্যাটায়নের সাথে যেকোনো অ্যানায়ন বেছে দেখো — গলিত না জলীয়, গাঢ় না লঘু, ক্যাথোড-অ্যানোডে কী জমে, কোন গ্যাস ওঠে আর পাত্রে কী থাকে, সব নিজে থেকে বের হবে।</p>
+<ol><li>ওপর থেকে একটা বিষয় বেছে নাও: তড়িৎ বিশ্লেষণ, শুষ্ক কোষ বা লবণ সেতু।</li>
+<li>“পরের ধাপ” বাটনে ক্লিক করো। ছবিতে ক্লিক করলে বা কীবোর্ডে → / স্পেস চাপলেও হবে। এক ক্লিকে এক ধাপ।</li>
+<li>ডান পাশে সেই ধাপের সমীকরণ ও সহজ ভাষার ব্যাখ্যা আসবে। বাঁ পাশের ছবিতে আয়ন, ইলেকট্রন ও গ্যাসের বুদবুদ নড়তে দেখবে।</li>
+<li><b>তড়িৎ বিশ্লেষণে</b> ছবির ওপরের বাটনে ইলেক্ট্রোলাইট বদলে দেখো (NaCl, CuSO₄, পানি...) — কোথায় কী তৈরি হয় বদলে যাবে।</li>
+<li><b>লবণ সেতুতেও</b> কমলা <b>“✏️ নিজে করো”</b> বাটনে যেকোনো দুই ধাতু বেছে কোষ বানাতে পারবে — কোনটা অ্যানোড, ক্যাথোড, বিভব কত, সব নিজে থেকে বের হবে। এছাড়া “লবণ সেতু সরাও” চাপলে বাল্ব নিভে যায় — কেন, সেটা ৪ নম্বর ধাপে দেখো।</li></ol>
+<p>রং চেনার উপায়: কমলা (+) = ক্যাটায়ন, নীল (−) = অ্যানায়ন। হলুদ-সবুজ বুদবুদ = Cl₂।</p></details>
+<!-- বাম কার্ড: #ctl = ইলেক্ট্রোলাইট/“নিজে করো” বাটন ও ড্রপডাউন (জাভাস্ক্রিপ্ট ভরে) -->
+<section class="card left"><div id="ctl"></div>
+<!-- .stick : ছবি + স্ট্যাটাস + বাটন একসাথে। ফোনে এই অংশটি স্ক্রিনের মাথায় আটকে থাকে -->
+<div class="stick">
+<svg id="sv" viewBox="0 0 420 306" role="img" aria-label="তড়িৎ রসায়নের এনিমেশন"></svg>
+<div class="st" id="st"></div>
+<div class="ctrl"><button id="prev">← আগে</button><button id="next">পরের ধাপ →</button><button id="reset" aria-label="আবার শুরু">↺</button></div>
+<div class="dots" id="dots"></div><div class="hint">ছবিতে ক্লিক, → বা স্পেস চাপলেও পরের ধাপ</div>
+</div><!-- /.stick --></section>
+<!-- ডান অংশ: #sum = ঘটনার সামারি, #panel = ধাপে ধাপে ব্যাখ্যা, #extra = টেবিল/সারি/ব্যবহার -->
+<section><div class="sum" id="sum"></div><div id="panel"></div><div id="extra"></div></section>
+</main>
+<!-- ===== ফুটার ===== -->
+<footer>Created by Al Nahian Mugdho</footer>
+<script>
+/* =====================================================================
+   তড়িৎ রসায়ন ল্যাব — জাভাস্ক্রিপ্ট (সব এক ফাইলে, বাইরের লাইব্রেরি লাগে না)
+
+   কাঠামো (ওপর থেকে নিচে):
+   ১) তড়িৎ বিশ্লেষণ  — P (ইলেক্ট্রোলাইট তথ্য), stepsE (ধাপ), sceneE (ছবি)
+   ২) শুষ্ক কোষ       — STD (ধাপ), sceneD (ছবি)
+   ৩) লবণ সেতু        — MT (ধাতুর বিভব), gbuild (কোষ তৈরি), stepsG, sceneG
+   ৪) “নিজে করো” (তড়িৎ বিশ্লেষণ) — C/A (আয়ন তালিকা), build (নিয়ম অনুযায়ী ফল বের করে)
+   ৫) ইঞ্জিন          — TABS, ctl, extra, render, ইভেন্ট (ক্লিক/কীবোর্ড)
+
+   ধারণা: প্রতিটি ট্যাবের steps() একটি তালিকা দেয় {t:শিরোনাম, m:সমীকরণ, c:নোট, y:সহজ কথায়, st:স্ট্যাটাস},
+   আর scene() ছবির SVG লেখা দেয়। render() বর্তমান ধাপ (n) পর্যন্ত সবকিছু আঁকে।
+   নতুন ইলেক্ট্রোলাইট যোগ করতে চাইলে P-তে একটি অবজেক্ট বাড়ালেই হয় (ফিল্ডের ব্যাখ্যা P-র ওপরে)।
+   ===================================================================== */
+// ছোট সহায়ক: id দিয়ে HTML এলিমেন্ট ধরা
+const $=id=>document.getElementById(id);
+// ধাপের নম্বরকে বাংলা অঙ্কে (১, ২, ৩...) বদলায়
+const bn=n=>String(n).replace(/\d/g,d=>"০১২৩৪৫৬৭৮৯"[d]);
+// গ্রাফাইট/প্লাটিনাম (নিষ্ক্রিয়) ইলেকট্রোডের ধূসর রং
+const GR="#454b59";
+/* ---------- তড়িৎ বিশ্লেষণ: ইলেক্ট্রোলাইট তথ্য ---------- */
+/* P = ইলেক্ট্রোলাইটের প্রিসেট তালিকা। প্রতিটি অবজেক্টের ফিল্ড:
+   nm = বাটনের নাম, liq = তরলের রং, il = আয়নের তালিকা (লেখা), ions = ছবিতে আঁকার আয়ন,
+   al/cl = অ্যানোড/ক্যাথোডের উপাদান, cw/aw = সারিতে হাইলাইট হবে এমন বিজয়ী আয়ন,
+   c = ক্যাথোডের ফল  {t:"m"(ধাতু জমে)|"g"(গ্যাস), col:রং, lb:লেবেল, eq:সমীকরণ, why:কারণ, r:বুদবুদ সংখ্যা},
+   a = অ্যানোডের ফল  {t:"g"(গ্যাস)|"d"(অ্যানোড ক্ষয়), ...},
+   tot = সামগ্রিক বিক্রিয়া, rest = পাত্রে কী থাকে (বিস্তারিত), sum = সহজ ভাষার সামারি */
+const P=[
+{nm:"গলিত NaCl",liq:"#ffd9a8",il:"Na⁺ , Cl⁻  (পানি নেই)",ions:["Na⁺","Cl⁻"],al:"গ্রাফাইট",cl:"গ্রাফাইট",cw:"Na⁺",aw:"Cl⁻",
+c:{t:"m",col:"#c9ced8",lb:"Na ধাতু জমে",eq:"Na⁺ + e⁻ → Na",why:"গলিত অবস্থায় Na⁺ ছাড়া আর কোনো ক্যাটায়ন নেই, তাই Na⁺-ই ইলেকট্রন নেয়।"},
+a:{t:"g",col:"#cfe84a",lb:"Cl₂ গ্যাস",eq:"Cl⁻ → ½Cl₂ + e⁻   (বা 2Cl⁻ → Cl₂ + 2e⁻)",why:"Cl⁻ ছাড়া আর কোনো অ্যানায়ন নেই। Cl₂ গ্যাসে ভেজা নীল লিটমাস পেপার ধরলে বর্ণ বদলে যায়।"},
+tot:"2NaCl(l) → 2Na(s) + Cl₂(g)",rest:"কিছুই অবশিষ্ট থাকে না — পুরো NaCl ভেঙে Na আর Cl₂ হয়।",sum:"গলিত NaCl-এ শুধু Na⁺ আর Cl⁻ আছে। তাই ক্যাথোডে সোডিয়াম ধাতু জমে, অ্যানোডে ক্লোরিন গ্যাস বের হয়।"},
+{nm:"গলিত KCl",liq:"#ffd9a8",il:"K⁺ , Cl⁻  (পানি নেই)",ions:["K⁺","Cl⁻"],al:"গ্রাফাইট",cl:"গ্রাফাইট",cw:"K⁺",aw:"Cl⁻",
+c:{t:"m",col:"#d8cfe8",lb:"K ধাতু জমে",eq:"K⁺ + e⁻ → K",why:"গলিত KCl-এ K⁺ ছাড়া অন্য ক্যাটায়ন নেই।"},
+a:{t:"g",col:"#cfe84a",lb:"Cl₂ গ্যাস",eq:"2Cl⁻ → Cl₂ + 2e⁻",why:"Cl⁻ ছাড়া অন্য অ্যানায়ন নেই, তাই Cl₂ গ্যাস তৈরি হয়।"},
+tot:"2KCl(l) → 2K(s) + Cl₂(g)",rest:"কিছুই অবশিষ্ট থাকে না।",sum:"NaCl-এর মতোই: গলিত KCl-এ ক্যাথোডে পটাশিয়াম ধাতু, অ্যানোডে Cl₂ গ্যাস।"},
+{nm:"গাঢ় NaCl দ্রবণ",liq:"#cfe6ff",il:"Na⁺ , H⁺ , Cl⁻ , OH⁻  (পানি থেকে H⁺, OH⁻)",ions:["Na⁺","H⁺","Cl⁻","OH⁻"],al:"গ্রাফাইট",cl:"গ্রাফাইট",cw:"H⁺",aw:"Cl⁻",
+c:{t:"g",col:"#e9f2ff",lb:"H₂ গ্যাস",r:4,eq:"2H⁺ + 2e⁻ → H₂",why:"Na⁺ আর H⁺ দুটোই আছে। সারিতে H⁺ নিচে (Na⁺ ওপরে), তাই H⁺ আগে চার্জমুক্ত হয়।"},
+a:{t:"g",col:"#cfe84a",lb:"Cl₂ গ্যাস",eq:"2Cl⁻ → Cl₂ + 2e⁻",why:"Cl⁻ আর OH⁻ দুটোই আছে। দ্রবণ গাঢ়, তাই Cl⁻ এর ঘনমাত্রা অনেক বেশি। ঘনমাত্রার প্রভাব এখানে বেশি কার্যকর — Cl⁻ আগে চার্জমুক্ত হয়।"},
+tot:"2NaCl + 2H₂O → 2NaOH + Cl₂ + H₂",rest:"Na⁺ ও OH⁻ পাত্রে থেকে যায় → NaOH (কষ্টিক সোডা) তৈরি হয়।",sum:"পানি মেশানো থাকায় ক্যাথোডে Na নয়, H₂ গ্যাস বের হয়। অ্যানোডে Cl₂ বের হয়, আর দ্রবণে NaOH জমে।"},
+{nm:"CuSO₄ দ্রবণ (গ্রাফাইট)",liq:"#8fc4f0",il:"Cu²⁺ , H⁺ , SO₄²⁻ , OH⁻",ions:["Cu²⁺","H⁺","SO₄²⁻","OH⁻"],al:"গ্রাফাইট",cl:"গ্রাফাইট",cw:"Cu²⁺",aw:"OH⁻",
+c:{t:"m",col:"#c77b3b",lb:"Cu ধাতু জমে",eq:"Cu²⁺ + 2e⁻ → Cu",why:"Cu²⁺ আর H⁺ দুটোই আছে। সারিতে Cu²⁺ নিচে, তাই Cu²⁺ আগে ইলেকট্রন নিয়ে তামা হয়।"},
+a:{t:"g",col:"#e3f1ff",lb:"O₂ গ্যাস",r:3,eq:"4OH⁻ → O₂ + 2H₂O + 4e⁻",why:"SO₄²⁻ আর OH⁻ দুটোই আছে। সারিতে OH⁻ নিচে, তাই OH⁻ আগে ইলেকট্রন ছাড়ে → O₂ গ্যাস।"},
+tot:"2CuSO₄ + 2H₂O → 2Cu + O₂ + 2H₂SO₄",rest:"H⁺ ও SO₄²⁻ থেকে যায় → H₂SO₄ তৈরি হয়। (H₂SO₄ একটি নিরুদক — পানি শোষক।)",sum:"CuSO₄ দ্রবণে ক্যাথোডে লাল-বাদামী তামা জমে, অ্যানোডে অক্সিজেন বের হয়, আর দ্রবণ ধীরে ধীরে সালফিউরিক এসিড হয়ে যায়।"},
+{nm:"CuSO₄ দ্রবণ (তামার অ্যানোড)",liq:"#8fc4f0",il:"Cu²⁺ , SO₄²⁻  (+ অ্যানোড নিজে তামা)",ions:["Cu²⁺","SO₄²⁻"],al:"অশুদ্ধ Cu",cl:"বিশুদ্ধ Cu",cw:"Cu²⁺",aw:"Cu",
+c:{t:"m",col:"#c77b3b",lb:"বিশুদ্ধ Cu জমে",eq:"Cu²⁺ + 2e⁻ → Cu",why:"দ্রবণের Cu²⁺ ইলেকট্রন নিয়ে বিশুদ্ধ তামা হয়ে ক্যাথোডে জমে।"},
+a:{t:"d",col:"#c77b3b",lb:"অ্যানোডের Cu ক্ষয়",eq:"Cu → Cu²⁺ + 2e⁻",why:"অ্যানোড গ্রাফাইট নয়, তামার তৈরি। সক্রিয় ধাতব অ্যানোড নিজেই ইলেকট্রন ছেড়ে Cu²⁺ হয়ে দ্রবণে চলে যায়। (অশুদ্ধি তলায় জমে।)"},
+tot:"অ্যানোডের Cu → দ্রবণ → ক্যাথোডে Cu",rest:"CuSO₄-এর পরিমাণ প্রায় একই থাকে। অ্যানোড ছোট হয়, ক্যাথোড মোটা হয়।",sum:"এভাবে ধাতু বিশুদ্ধ করা হয়: অশুদ্ধ তামা অ্যানোডে, বিশুদ্ধ তামার দণ্ড ক্যাথোডে। তামা এক দণ্ড থেকে অন্য দণ্ডে চলে যায়।"},
+{nm:"পানি + H₂SO₄",liq:"#d4ecf7",il:"H⁺ , SO₄²⁻ , OH⁻",ions:["H⁺","SO₄²⁻","OH⁻"],al:"প্লাটিনাম",cl:"প্লাটিনাম",cw:"H⁺",aw:"OH⁻",
+c:{t:"g",col:"#e9f2ff",lb:"H₂ গ্যাস",r:6,eq:"4H⁺ + 4e⁻ → 2H₂",why:"ক্যাটায়ন শুধু H⁺, তাই H⁺ ইলেকট্রন নিয়ে H₂ হয়।"},
+a:{t:"g",col:"#ffffff",lb:"O₂ গ্যাস",r:3,eq:"4OH⁻ → O₂ + 2H₂O + 4e⁻",why:"SO₄²⁻ আর OH⁻ এর মধ্যে সারিতে OH⁻ নিচে, তাই OH⁻ আগে চার্জমুক্ত হয়।"},
+tot:"2H₂O → 2H₂ + O₂      (H₂ : O₂ = 2 : 1)",rest:"H₂SO₄ থেকে যায় — সে শুধু পরিবাহিতা বাড়ায়। বিশুদ্ধ পানি প্রায় অপরিবাহী, তাই সামান্য এসিড মেশাতে হয়।",sum:"আসলে পানিই ভেঙে যায়। ক্যাথোডে H₂ বের হয় অ্যানোডের দ্বিগুণ (২ : ১), অ্যানোডে বের হয় O₂।"},
+{nm:"AgNO₃ (Ag অ্যানোড) — প্রলেপ",liq:"#e7f0fa",il:"Ag⁺ , NO₃⁻",ions:["Ag⁺","NO₃⁻"],al:"Ag পাত",cl:"চামচ",cw:"Ag⁺",aw:"Ag",
+c:{t:"m",col:"#eef1f6",lb:"চামচে Ag জমে",eq:"Ag⁺ + e⁻ → Ag",why:"Ag⁺ সারিতে H⁺ এর নিচে, তাই Ag⁺ আগে ইলেকট্রন নিয়ে চামচের গায়ে রুপা হয়ে জমে।"},
+a:{t:"d",col:"#dfe3ea",lb:"Ag পাত ক্ষয়",eq:"Ag → Ag⁺ + e⁻",why:"অ্যানোড রুপার পাত। সে নিজেই ইলেকট্রন ছেড়ে Ag⁺ হয়ে দ্রবণে যায়।"},
+tot:"Ag (পাত) → Ag (চামচে)",rest:"AgNO₃ দ্রবণ একই থাকে। রুপা পাত থেকে চামচে সরে যায়।",sum:"এটাই ইলেকট্রোপ্লেটিং: যে জিনিসে প্রলেপ দেবে সেটা ক্যাথোডে, প্রলেপের ধাতু অ্যানোডে, আর ওই ধাতুর লবণের দ্রবণে ডোবানো।"}
+];
+// DIS = প্রতিটি প্রিসেটের বিয়োজন সমীকরণ (যেমন NaCl → Na⁺ + Cl⁻), P-এর সাথে জুড়ে দেওয়া হয়
+const DIS=["NaCl → Na⁺ + Cl⁻","KCl → K⁺ + Cl⁻","NaCl → Na⁺ + Cl⁻  ;  H₂O ⇌ H⁺ + OH⁻","CuSO₄ → Cu²⁺ + SO₄²⁻  ;  H₂O ⇌ H⁺ + OH⁻","CuSO₄ → Cu²⁺ + SO₄²⁻","H₂SO₄ → 2H⁺ + SO₄²⁻  ;  H₂O ⇌ H⁺ + OH⁻","AgNO₃ → Ag⁺ + NO₃⁻"];
+P.forEach((q,i)=>q.dis=DIS[i]);
+// RS = “পাত্রে পড়ে থাকে” এর ছোট রূপ (টেবিল ও ছবির নিচে দেখানোর জন্য)
+const RS=["কিছুই থাকে না","কিছুই থাকে না","NaOH (কষ্টিক সোডা) দ্রবণ","H₂SO₄ দ্রবণ","CuSO₄ দ্রবণ, অশুদ্ধি তলায়","H₂SO₄ (আগের মতোই)","AgNO₃ দ্রবণ (একই)"];
+P.forEach((q,i)=>q.rs=RS[i]);
+// সক্রিয়তা সারি: নিচের আয়ন আগে চার্জমুক্ত হয়। CAT = ক্যাটায়ন, ANI = অ্যানায়ন
+const CAT=["Li⁺","K⁺","Ca²⁺","Na⁺","Mg²⁺","Al³⁺","Zn²⁺","Fe²⁺","Sn²⁺","Pb²⁺","H⁺","Cu²⁺","Ag⁺","Au³⁺"],ANI=["F⁻","NO₃⁻","SO₄²⁻","Cl⁻","Br⁻","I⁻","OH⁻"];
+// তড়িৎ বিশ্লেষণের ৫টি ধাপ তৈরি করে (p = বেছে নেওয়া ইলেক্ট্রোলাইট)
+function stepsE(p){return[
+{t:"দ্রবণে কী কী আয়ন আছে?",m:`ইলেক্ট্রোলাইট : ${p.nm}\nআয়ন : ${p.il}\nবিয়োজন : ${p.dis}\nইলেকট্রোড : অ্যানোড = ${p.al} , ক্যাথোড = ${p.cl}`,c:"যে পদার্থ গলে বা পানিতে মিশে আয়ন দেয় এবং বিদ্যুৎ চালায়, সেটাই তড়িৎ বিশ্লেষ্য। আয়নে ভেঙে যাওয়ার উদাহরণ : MgCl₂ → Mg²⁺ + 2Cl⁻",y:"আয়ন হলো চার্জযুক্ত কণা। এই আয়নগুলোই বিদ্যুৎ বহন করে। কমলা (+) হলো ক্যাটায়ন, নীল (−) হলো অ্যানায়ন।",st:"আয়নগুলো দ্রবণে এলোমেলো ছড়িয়ে আছে"},
+{t:"ব্যাটারি যুক্ত করলাম",m:`ব্যাটারির (+) ➜ অ্যানোড\nব্যাটারির (−) ➜ ক্যাথোড\nক্যাটায়ন (+) ➜ ক্যাথোডের দিকে\nঅ্যানায়ন (−) ➜ অ্যানোডের দিকে`,c:"বিপরীত চার্জ পরস্পরকে আকর্ষণ করে।",y:"ব্যাটারি চালু হতেই কমলা (+) আয়ন ডানের (−) দণ্ডে আর নীল (−) আয়ন বাঁয়ের (+) দণ্ডে ছুটতে থাকে।",st:"আয়ন ছুটছে — (+) ডানে, (−) বাঁয়ে"},
+{t:"ক্যাথোডে (−) : বিজারণ",m:`ক্যাথোডে বিজারণ বিক্রিয়া :\n${p.c.eq}`,c:p.c.why,y:`মনে রাখো : ক্যাটায়ন (K⁺, Na⁺, Ca²⁺ ...) বিজারিত হয়। ক্যাথোড ইলেকট্রন সরবরাহ করে। ক্যাটায়ন সেই ইলেকট্রন নিয়ে নিরপেক্ষ হয়ে যায়। ফলে : ${p.c.lb}।`,st:"ক্যাথোডে : "+p.c.lb},
+{t:"অ্যানোডে (+) : জারণ",m:`অ্যানোডে জারণ বিক্রিয়া :\n${p.a.eq}`,c:p.a.why,y:`মনে রাখো : অ্যানায়ন (O²⁻, Cl⁻, F⁻ ...) জারিত হয়। অ্যানোড ইলেকট্রন টেনে নেয়। তাই অ্যানায়ন (বা অ্যানোড নিজে) ইলেকট্রন ছেড়ে দেয়। ফলে : ${p.a.lb}।`,st:"অ্যানোডে : "+p.a.lb},
+{t:"সামগ্রিক বিক্রিয়া ও দ্রবণে কী থাকে",m:`সামগ্রিক : ${p.tot}\nদ্রবণে থাকে : ${p.rest}`,c:"ক্যাথোডে বিজারণ + অ্যানোডে জারণ = সামগ্রিক বিক্রিয়া।",y:p.sum,st:"শেষ ফল : "+p.c.lb+" , "+p.a.lb}]}
+// তড়িৎ বিশ্লেষণের ছবি আঁকে। p = ইলেক্ট্রোলাইট, n = বর্তমান ধাপ (০–৪)
+// ধাপ ০: আয়ন ছড়ানো | ১: আয়ন ছুটছে | ২: ক্যাথোডের ফল | ৩: অ্যানোডের ফল | ৪: পাত্রে কী থাকে
+function sceneE(p,n){
+ // ক) বিকার ও তরল
+ let o=`<rect x="63" y="130" width="294" height="137" fill="${p.liq}" opacity=".85"/><path d="M60 100V270H360V100" fill="none" stroke="#51607f" stroke-width="6" stroke-linejoin="round"/>`;
+ // খ) ব্যাটারি ও তার (বাঁয়ে + = অ্যানোড, ডানে − = ক্যাথোড)
+ o+=`<rect x="170" y="14" width="80" height="30" rx="5" fill="#33415c"/><text x="182" y="36" fill="#ff9a9a" font-size="18" font-weight="700">+</text><text x="228" y="36" fill="#9ac7ff" font-size="18" font-weight="700">−</text><path d="M170 29H140V70M250 29H280V70" fill="none" stroke="#6b7690" stroke-width="3"/>`;
+ // অ্যানোড সক্রিয় ধাতু হলে (Cu, Ag) ৩য় ধাপ থেকে পাত সরু হয় (ক্ষয়)
+ const dis=p.a.t=="d",w=dis&&n>=3?10:20;
+ o+=`<rect x="${130+(20-w)/2}" y="70" width="${w}" height="170" rx="3" fill="${dis?p.a.col:GR}" stroke="#0004"/><rect x="270" y="70" width="20" height="170" rx="3" fill="${GR}"/>`;
+ o+=`<text x="140" y="62" text-anchor="middle" font-size="11" font-weight="700" fill="#b8321f">অ্যানোড (+)</text><text x="280" y="62" text-anchor="middle" font-size="11" font-weight="700" fill="#1d4fb0">ক্যাথোড (−)</text><text x="140" y="256" text-anchor="middle" font-size="9" fill="#33415c">${p.al}</text><text x="280" y="256" text-anchor="middle" font-size="9" fill="#33415c">${p.cl}</text>`;
+ // ক্যাথোডে ধাতু জমলে পুরু স্তর বাড়তে থাকে (২য় ধাপ থেকে)
+ if(n>=2&&p.c.t=="m")o+=`<rect x="264" y="240" width="32" height="0" rx="4" fill="${p.c.col}" stroke="#0004"><animate attributeName="height" from="0" to="100" dur="2s" fill="freeze"/><animate attributeName="y" from="240" to="140" dur="2s" fill="freeze"/></rect>`;
+ // আয়ন আঁকা: ক্যাটায়ন (+) কমলা → ক্যাথোডের দিকে, অ্যানায়ন (−) নীল → অ্যানোডের দিকে ছুটে যায় (১ম ধাপ থেকে)
+ for(let i=0;i<8;i++){const s=p.ions[i%p.ions.length],cat=/⁺$/.test(s)||/[²³]⁺$/.test(s),x=162+(i*43)%80,y=150+(i*29)%90,dx=n>=1?(cat?262-x:156-x):0;
+  o+=`<g>${dx?`<animateTransform attributeName="transform" type="translate" from="0 0" to="${dx} 0" dur="${3+i%3*.6}s" begin="${i*.25}s" repeatCount="indefinite"/>`:""}<circle cx="${x}" cy="${y}" r="7" fill="${cat?"#e8742a":"#2f6fde"}"/><text x="${x}" y="${y+3.5}" text-anchor="middle" font-size="10" font-weight="700" fill="#fff">${cat?"+":"−"}</text><text x="${x+9}" y="${y+3}" font-size="9" fill="#16303a">${s}</text></g>`}
+ // গ্যাসের বুদবুদ: x = ইলেকট্রোডের জায়গা, col = রং, c = বুদবুদের সংখ্যা (H₂ : O₂ = ২ : ১ দেখাতে ৬ বনাম ৩)
+ const bub=(x,col,c)=>Array.from({length:c},(_,i)=>{const d=1.5+i%3*.3;return`<circle cx="${x+(i*9%18)-9}" cy="235" r="${3+i%2}" fill="${col}" stroke="#0003"><animate attributeName="cy" from="235" to="150" dur="${d}s" begin="${i*.35}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0" dur="${d}s" begin="${i*.35}s" repeatCount="indefinite"/></circle>`}).join("");
+ const lab=(x,t)=>`<text x="${x}" y="122" text-anchor="middle" font-size="11" font-weight="700" fill="#16303a">${t}</text>`;
+ // ধাপ ২: ক্যাথোডের ফল (গ্যাস হলে বুদবুদ + লেবেল)
+ if(n>=2){o+=p.c.t=="g"?bub(280,p.c.col,p.c.r||4):"";o+=lab(285,p.c.lb)}
+ // ধাপ ৩: অ্যানোডের ফল
+ if(n>=3){o+=p.a.t=="g"?bub(140,p.a.col,p.a.r||4):"";o+=lab(140,p.a.lb)}
+ // ধাপ ৪: পাত্রে কী পড়ে থাকে
+ if(n>=4)o+=`<text x="210" y="298" text-anchor="middle" font-size="10.5" font-weight="700" fill="#7a3d0c">পাত্রে থাকে : ${p.rs}</text>`;
+ return o}
+/* ---------- শুষ্ক কোষ ---------- */
+// STD = শুষ্ক কোষের ৬টি ধাপ (গঠন → বাল্ব → জিংকে জারণ → ইলেকট্রন প্রবাহ → কার্বনে বিজারণ → সামগ্রিক)
+const STD=[
+{t:"শুষ্ক কোষের গঠন",m:`অ্যানোড (−) : জিংক (Zn) এর ছোট কৌটা\nক্যাথোড (+) : কার্বন (গ্রাফাইট) দণ্ড\nপেস্ট : MnO₂ + NH₄Cl + ZnCl₂ + পানি`,c:"শুষ্ক কোষ এক ধরনের গ্যালভানিক কোষ — রাসায়নিক শক্তিকে বিদ্যুৎ শক্তিতে বদলায়।",y:"টর্চ বা রিমোটের ব্যাটারি কেটে দেখলে মাঝখানে কালো কার্বন দণ্ড, তাকে ঘিরে ভেজা পেস্ট, আর বাইরে জিংকের কৌটা পাওয়া যায়।",st:"বর্তনী এখনো খোলা — বাল্ব নেভা"},
+{t:"বাল্ব যুক্ত করলাম",m:`তারের এক প্রান্ত : জিংক কৌটা\nতারের অন্য প্রান্ত : কার্বন দণ্ড\nমাঝে : বৈদ্যুতিক বাল্ব`,c:"বাইরের বর্তনী পূর্ণ না হলে কোষের ভেতরে বিক্রিয়া এগোয় না।",y:"তার জুড়ে দিয়ে বিদ্যুৎ চলার পথ তৈরি করলাম। এবার জিংক থেকে ইলেকট্রন ছুটতে পারবে।",st:"বর্তনী পূর্ণ হলো — জিংক ইলেকট্রন দিতে প্রস্তুত"},
+{t:"অ্যানোডে (জিংক) : জারণ",m:`Zn → Zn²⁺ + 2e⁻`,c:"জিংক ২টি ইলেকট্রন ত্যাগ করে Zn²⁺ আয়ন হয়ে পেস্টে চলে যায়।",y:"জিংক নিজে ক্ষয় হয়ে ইলেকট্রন ছেড়ে দেয়। এই ইলেকট্রনই বিদ্যুতের উৎস।",st:"জিংক ক্ষয় হচ্ছে — Zn²⁺ তৈরি হচ্ছে"},
+{t:"তার বেয়ে ইলেকট্রন চলে",m:`Zn থেকে e⁻  ➜ তার ➜ বাল্ব ➜ কার্বন দণ্ড\n(ইলেকট্রন প্রবাহ = বিদ্যুৎ প্রবাহ)`,c:"ইলেকট্রন সবসময় অ্যানোড থেকে ক্যাথোডে যায়।",y:"নীল ফোঁটাগুলো ইলেকট্রন। তারা তার বেয়ে বাল্বের ভেতর দিয়ে গেলে বাল্ব জ্বলে ওঠে।",st:"বাল্ব জ্বলছে — ইলেকট্রন প্রবাহিত হচ্ছে"},
+{t:"ক্যাথোডে (কার্বন দণ্ড) : বিজারণ",m:`2NH₄⁺ + 2MnO₂ + 2e⁻ → 2NH₃ + Mn₂O₃ + H₂O`,c:"কার্বন দণ্ড ইলেকট্রন পরিবহন করে। NH₄⁺ ও MnO₂ সেই ইলেকট্রন গ্রহণ করে বিজারিত হয় — তাই কোষে MnO₂ লাগে।",y:"কার্বন দণ্ডে ইলেকট্রন পৌঁছালে পেস্টের NH₄⁺ ও MnO₂ সেগুলো নিয়ে নেয়। এতে অ্যামোনিয়া (NH₃) গ্যাস ও Mn₂O₃ তৈরি হয়।",st:"কার্বন দণ্ডে NH₃ গ্যাস তৈরি হচ্ছে"},
+{t:"সামগ্রিক কোষ বিক্রিয়া",m:`Zn + 2NH₄⁺ + 2MnO₂ → Zn²⁺ + 2NH₃ + Mn₂O₃ + H₂O`,c:"অ্যানোড (জারণ) + ক্যাথোড (বিজারণ) = সামগ্রিক বিক্রিয়া। জিংক শেষ হয়ে গেলে ব্যাটারি আর চলে না।",y:"জিংক ক্ষয় হয়, পেস্টের উপাদান বদলায়, আর এর বিনিময়ে আমরা বিদ্যুৎ পাই। সব জিংক শেষ হলে ব্যাটারি ফুরিয়ে যায়।",st:"রাসায়নিক শক্তি ➜ বিদ্যুৎ শক্তি"}];
+// শুষ্ক কোষের ছবি। n = ধাপ। ২য় ধাপে Zn²⁺ আয়ন, ৩য় ধাপে ইলেকট্রন + বাল্ব জ্বলে, ৪র্থ ধাপে NH₃ বুদবুদ
+function sceneD(n){
+ // তারের পথ: জিংক (নিচে) → ডানে → বাল্ব → ওপর দিয়ে → কার্বন দণ্ড। ইলেকট্রন এই পথে চলে
+ const wire="M100 258V285H330V40H100V60";
+ let o=`<rect x="40" y="100" width="120" height="150" rx="6" fill="#d7dbe2" stroke="${n==2?"#e8742a":"#7d8799"}" stroke-width="6"/><rect x="48" y="108" width="104" height="134" fill="#e6dcc3"/><rect x="95" y="70" width="10" height="150" fill="#222" ${n>=4?'stroke="#2f6fde" stroke-width="2"':""}/><rect x="91" y="58" width="18" height="12" fill="#8d94a3"/><rect x="80" y="250" width="40" height="8" fill="#8d94a3"/>`;
+ o+=`<path d="${wire}" fill="none" stroke="#6b7690" stroke-width="3"/><circle cx="330" cy="160" r="22" fill="${n>=3?"#ffe45c":"#e8ecf3"}" stroke="#6b7690" stroke-width="3"/>${n>=3?'<circle cx="330" cy="160" r="34" fill="#ffe45c" opacity=".35"><animate attributeName="r" values="30;38;30" dur="1.4s" repeatCount="indefinite"/></circle>':""}<rect x="320" y="180" width="20" height="12" fill="#8d94a3"/>`;
+ o+=`<text x="115" y="66" font-size="11" font-weight="700" fill="#1d4fb0">কার্বন দণ্ড = ক্যাথোড (+)</text><text x="168" y="190" font-size="11" font-weight="700" fill="#b8321f">জিংক কৌটা</text><text x="168" y="205" font-size="11" font-weight="700" fill="#b8321f">= অ্যানোড (−)</text><text x="168" y="130" font-size="10" fill="#5a4a1c">MnO₂ + NH₄Cl</text><text x="168" y="143" font-size="10" fill="#5a4a1c">+ ZnCl₂ পেস্ট</text>`;
+ // Zn²⁺ আয়ন জিংকের দেয়াল থেকে পেস্টে সরে যাচ্ছে
+ if(n>=2)for(let i=0;i<3;i++)o+=`<g><animateTransform attributeName="transform" type="translate" from="0 0" to="14 ${i*8-8}" dur="${2+i*.5}s" repeatCount="indefinite"/><circle cx="62" cy="${130+i*35}" r="9" fill="#e8742a"/><text x="62" y="${133+i*35}" text-anchor="middle" font-size="7" fill="#fff" font-weight="700">Zn²⁺</text></g>`;
+ // ইলেকট্রন (নীল ফোঁটা) তার বেয়ে চলছে — animateMotion দিয়ে
+ if(n>=3)for(let i=0;i<5;i++)o+=`<circle r="4" fill="#2f6fde"><animateMotion dur="7s" begin="${i*1.4}s" repeatCount="indefinite" path="${wire}"/></circle>`;
+ // কার্বন দণ্ডে NH₃ গ্যাসের বুদবুদ
+ if(n>=4)for(let i=0;i<4;i++)o+=`<circle cx="${96+i*4}" cy="200" r="${3+i%2}" fill="#9bd39a" stroke="#0003"><animate attributeName="cy" from="200" to="120" dur="${1.6+i*.3}s" begin="${i*.4}s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0" dur="${1.6+i*.3}s" begin="${i*.4}s" repeatCount="indefinite"/></circle>`;
+ return o}
+/* ---------- গ্যালভানিক কোষ + লবণ সেতু ---------- */
+// MT = লবণ সেতু ট্যাবের ধাতু-তালিকা। e = আদর্শ বিভব ×১০০ (পূর্ণসংখ্যা, ভাসমান ভুল এড়াতে),
+// n = আয়নের চার্জ, x/b = লবণের অ্যানায়ন (SO₄ বা NO₃) ও তার চার্জ, bn = বাংলা নাম।
+// কম e = বেশি সক্রিয় = অ্যানোড। (Li, K, Ca, Na পানির সাথে বিক্রিয়া করে, তাই বাদ)
+const MT={Mg:{e:-237,n:2,x:"SO₄",b:2,bn:"ম্যাগনেসিয়াম"},Al:{e:-166,n:3,x:"SO₄",b:2,bn:"অ্যালুমিনিয়াম"},Zn:{e:-76,n:2,x:"SO₄",b:2,bn:"জিংক"},Fe:{e:-44,n:2,x:"SO₄",b:2,bn:"আয়রন"},Sn:{e:-14,n:2,x:"SO₄",b:2,bn:"টিন"},Pb:{e:-13,n:2,x:"NO₃",b:1,bn:"লেড"},Cu:{e:34,n:2,x:"SO₄",b:2,bn:"কপার"},Ag:{e:80,n:1,x:"NO₃",b:1,bn:"সিলভার"}};
+// বিভব দেখানোর ফরম্যাট: -76 → −0.76, 34 → +0.34
+const fE=e=>(e<0?"−":"+")+(Math.abs(e)/100).toFixed(2);
+// “ধাতুর সারি ও আদর্শ বিভব” টেবিলের HTML
+const etab=()=>`<table><tr><th>ধাতু</th><th>আদর্শ বিভব E° (V)</th></tr>${Object.keys(MT).map(m=>`<tr><td>${m} — ${MT[m].bn}</td><td>${fE(MT[m].e)}</td></tr>`).join("")}</table><p style="font-size:.88rem;margin:6px 0 0">কোষ বিভব = E°(ক্যাথোড) − E°(অ্যানোড)। যার E° কম (সারিতে ওপরে), সে অ্যানোড। এই মানগুলো পাঠ্যের বাইরেও হতে পারে; তবে বইয়ের চিত্রে Mg|Cu = 2.71 V এর সাথে মেলে। Li, K, Ca, Na পানির সাথে বিক্রিয়া করে, তাই এখানে নেওয়া হয়নি।</p>`;
+// দুটি ধাতু (m1, m2) ও সেতুর লবণ (brs) থেকে পুরো কোষের তথ্য বানায়।
+// ফেরত দেয়: অ্যানোড/ক্যাথোড, সমীকরণ, বিভব E, সতর্কতা ইত্যাদি। সম্ভব না হলে {err:"কারণ"}
+function gbuild(m1,m2,brs){
+ if(m1==m2)return{err:"দুই পাত একই ধাতুর হলে বিভব পার্থক্য শূন্য — কোনো কোষ হয় না। দুটি আলাদা ধাতু বেছে নাও।"};
+ // যার E কম (বেশি সক্রিয়) সে অ্যানোড a, অন্যটি ক্যাথোড c
+ const [a,c]=MT[m1].e<MT[m2].e?[m1,m2]:[m2,m1],ta=MT[a],tc=MT[c];
+ const ion=m=>C.find(q=>q.m==m).s,sym=t=>t.x=="SO₄"?"SO₄²⁻":"NO₃⁻";
+ const salt=t=>{const g=gcd(t.n,t.b);return{p:t.b/g}};
+ const F_=(m,t)=>{const g=gcd(t.n,t.b);return fm({m},{x:t.x,poly:true},t.b/g,t.n/g)};
+ const na=ta.n,nc=tc.n,L=na*nc/gcd(na,nc),Ia=ion(a),Ic=ion(c),Fa=F_(a,ta),Fc=F_(c,tc);
+ // কোষ বিভব E = E°(ক্যাথোড) − E°(অ্যানোড)
+ const E=((tc.e-ta.e)/100).toFixed(2),bi=brs=="KCl"?"Cl⁻":"NO₃⁻";
+ const xa=L/na,xc=L/nc,co=n=>n>1?n:"";
+ const same=ta.x==tc.x;
+ // আণবিক সমীকরণ শুধু তখনই লেখা হয় যখন দুই দ্রবণে একই অ্যানায়ন (দুটোই SO₄ বা দুটোই NO₃)
+ const mol=same?eqn([[12/na,a],[(12/nc)/salt(tc).p,Fc]],[[(12/na)/salt(ta).p,Fa],[12/nc,c]]):"";
+ // Ag⁺/Pb²⁺ থাকলে KCl সেতুতে AgCl/PbCl₂ অধঃক্ষেপ পড়ে — তাই সতর্কতা
+ const warn=(brs=="KCl"&&(a=="Pb"||c=="Pb"||a=="Ag"||c=="Ag"))?"KCl সেতুর Cl⁻ আয়ন Ag⁺ বা Pb²⁺ এর সাথে অধঃক্ষেপ (AgCl, PbCl₂) তৈরি করে — এই কোষে সেতুর জন্য KNO₃ নেওয়া উচিত।":"";
+ return{a,c,Ia,Ic,Fa,Fc,na,nc,L,xa,xc,E,bi,brs,warn,mol,Xa:sym(ta),Xc:sym(tc),ea:ta.e,ec:tc.e,
+  cell:`${a}(s) | ${Ia}(aq) ‖ ${Ic}(aq) | ${c}(s)`,aeq:`${a} → ${Ia} + ${co(na)}e⁻`,ceq:`${Ic} + ${co(nc)}e⁻ → ${c}`,
+  ionic:`${co(xa)}${a} + ${co(xc)}${Ic} → ${co(xa)}${Ia} + ${co(xc)}${c}`,
+  mix:same?"":"(দুই দ্রবণে ভিন্ন অ্যানায়ন থাকায় শুধু আয়নিক সমীকরণ দেওয়া হলো।)",
+  colA:"#dfe3ee",colC:c=="Cu"?"#8fc9ee":c=="Fe"?"#cfe9d0":"#dfe3ee",colA2:a=="Fe"?"#cfe9d0":"#dfe3ee",pa:MC[a],pc:MC[c],low:+E<0.05}}
+// লবণ সেতুর ৫টি ধাপ। g = gbuild-এর ফল, br = লবণ সেতু আছে (true) / নেই (false)
+function stepsG(g,br){return[
+{t:"গ্যালভানিক (ডেনিয়েল) কোষের গঠন",m:`অ্যানোড : ${g.a} পাত ⟷ ${g.Fa} দ্রবণ\nক্যাথোড : ${g.c} পাত ⟷ ${g.Fc} দ্রবণ\nদুই দ্রবণের মাঝে : লবণ সেতু (U-নল, ${g.brs} জেলি)\nদুই পাতের মাঝে : তার + বাল্ব\nকোষ-প্রতীক : ${g.cell}`,c:`সারিতে ${g.a} ওপরে (${g.c} এর চেয়ে বেশি সক্রিয়), তাই ${g.a} ইলেকট্রন ছাড়ে — ${g.a} অ্যানোড, ${g.c} ক্যাথোড। কোষ স্বতঃস্ফূর্তভাবে বিদ্যুৎ তৈরি করে, বাইরের ব্যাটারি লাগে না।`+(g.low?" (দুই ধাতুর সক্রিয়তা প্রায় কাছাকাছি, তাই বিভব খুব কম।)":""),y:"দুটো আলাদা পাত্রে দুই ধাতু ও তাদের লবণের দ্রবণ। একটা U-আকৃতির নল (লবণ সেতু) দুই দ্রবণকে জুড়ে রেখেছে। যে ধাতু বেশি সক্রিয়, সে-ই ইলেকট্রন ছাড়বে।",st:"কোষ প্রস্তুত — বাল্ব এখনো নেভা"},
+{t:`অ্যানোডে (${g.a}) : জারণ`,m:g.aeq,c:`${g.a} পাত ইলেকট্রন ছেড়ে ${g.Ia} হয়ে দ্রবণে যায়, তাই পাত ক্ষয় হয় (ছোট হয়)।`,y:`${g.a} পাতটা একটু একটু করে গলে দ্রবণে মিশছে। যাওয়ার সময় ইলেকট্রন পাতে রেখে যাচ্ছে।`,st:`${g.a} পাত ক্ষয় হচ্ছে, ইলেকট্রন তারে যাচ্ছে`},
+{t:`ক্যাথোডে (${g.c}) : বিজারণ`,m:g.ceq,c:`তার বেয়ে আসা ইলেকট্রন নিয়ে দ্রবণের ${g.Ic} ${g.c} হয়ে পাতে জমে, পাত মোটা হয়।`,y:`ইলেকট্রন তারের ভেতর দিয়ে বাল্বে গিয়ে ${g.c} পাতে পৌঁছায়। বাল্ব জ্বলে। দ্রবণের ${g.Ic} সেই ইলেকট্রন নিয়ে ধাতু হয়ে পাতে লেগে যায়।`,st:`বাল্ব জ্বলছে — ${g.c} পাত মোটা হচ্ছে`},
+br?{t:"লবণ সেতুর কাজ",m:`অ্যানোডে ${g.Ia} বাড়ছে ➜ (+) বেশি\nক্যাথোডে ${g.Ic} কমছে ➜ ${g.Xc} বেশি, (−) বেশি\nলবণ সেতু : K⁺ ➜ ক্যাথোডের দ্রবণে\n          ${g.bi} ➜ অ্যানোডের দ্রবণে\n⇒ দুই দ্রবণ চার্জে নিরপেক্ষ, বিক্রিয়া চলতে থাকে`,c:`${g.brs}-এ K⁺ ও ${g.bi} এর গতি প্রায় সমান, তাই সেতুর আয়ন দুই দ্রবণের চার্জ ভারসাম্য রাখে।`+(g.warn?" ⚠ "+g.warn:""),y:"এক পাশে (+) জমে গেলে, অন্য পাশে (−) জমে গেলে ইলেকট্রন আর চলতে পারে না। লবণ সেতু দুই পাশে উল্টো চার্জের আয়ন পাঠিয়ে এই জমে যাওয়া আটকায়।",st:g.warn?"⚠ এই সেতুর দ্রবণ এখানে ঠিক নয় — KNO₃ নাও":"লবণ সেতু আছে — বাল্ব জ্বলেই চলেছে"}
+:{t:"লবণ সেতু নেই! কী হলো?",m:`অ্যানোডে ${g.Ia} জমে ➜ (+) বেড়ে যায়\nক্যাথোডে ${g.Xc} বাড়ে ➜ (−) বেড়ে যায়\n⇒ চার্জের অসমতা, ইলেকট্রন প্রবাহ থেমে যায়\n⇒ বিক্রিয়া বন্ধ, বাল্ব নিভে যায়`,c:"আয়ন একা থাকতে পারে না — একটা ক্যাটায়নের পাশে অ্যানায়ন লাগবেই।",y:"লবণ সেতু সরিয়ে দিলে দুই দ্রবণে চার্জ জমতে থাকে। বাঁ পাশে বেশি (+), ডান পাশে বেশি (−)। ফলে ইলেকট্রন আর চলে না, বাল্ব নিভে যায়।",st:"লবণ সেতু নেই — বাল্ব নিভে গেল!"},
+{t:"সামগ্রিক কোষ বিক্রিয়া ও কোষ বিভব",m:(g.na!=g.nc?`ইলেকট্রন সমান করি (ল.সা.গু. = ${g.L}) :\n  অ্যানোড × ${g.xa} : ${g.xa>1?g.xa:""}${g.a} → ${g.xa>1?g.xa:""}${g.Ia} + ${g.L}e⁻\n  ক্যাথোড × ${g.xc} : ${g.xc>1?g.xc:""}${g.Ic} + ${g.L}e⁻ → ${g.xc>1?g.xc:""}${g.c}\n`:"")+`আয়নিক : ${g.ionic}\n`+(g.mol?`আণবিক : ${g.mol}\n`:"")+`কোষ বিভব : E° = E°(ক্যাথোড) − E°(অ্যানোড)\n        = (${fE(g.ec)}) − (${fE(g.ea)}) = ${g.E} V`,c:"অ্যানোড (জারণ) + ক্যাথোড (বিজারণ) = কোষ বিক্রিয়া। লবণ সেতু বিক্রিয়ার অংশ নয়, শুধু চার্জ ভারসাম্য রাখে।"+(g.mix?" "+g.mix:"")+" (E° মান পাঠ্যের বাইরেও হতে পারে।)",y:`শেষে ${g.a} ধাতু দ্রবণে গেল, দ্রবণের ${g.c} ধাতু হয়ে জমল। এই লেনদেনেই বিদ্যুৎ তৈরি হলো (প্রায় ${g.E} V) — লবণ সেতু ছাড়া এটা বেশিক্ষণ চলে না।`,st:br?"রাসায়নিক শক্তি ➜ বিদ্যুৎ শক্তি":"লবণ সেতু ছাড়া বিক্রিয়া থেমে যায়"}]}
+// গ্যালভানিক কোষের ছবি। n = ধাপ, br = সেতু আছে কি না, g = কোষের তথ্য
+function sceneG(n,br,g){
+ const ion=(x,y,s,col,dx,dy,d,r)=>`<g><animateTransform attributeName="transform" type="translate" from="0 0" to="${dx} ${dy}" dur="${d}s" repeatCount="indefinite"/><circle cx="${x}" cy="${y}" r="${r||8}" fill="${col}"/><text x="${x}" y="${y+3}" text-anchor="middle" font-size="7" font-weight="700" fill="#fff">${s}</text></g>`;
+ // তারের পথ (জিংক/অ্যানোড পাত → বাল্ব → ক্যাথোড পাত); on = বাল্ব জ্বলবে কি না (সেতু না থাকলে ৩য় ধাপের পর নিভে যায়)
+ const wire="M112 60V30H308V60",on=n>=2&&(br||n<3);
+ let o=`<rect x="33" y="170" width="144" height="97" fill="${g.colA2}"/><rect x="243" y="170" width="144" height="97" fill="${g.colC}"/><path d="M30 130V270H180V130M240 130V270H390V130" fill="none" stroke="#51607f" stroke-width="5" stroke-linejoin="round"/><text x="105" y="287" text-anchor="middle" font-size="10" fill="#33415c">${g.Fa} দ্রবণ</text><text x="315" y="287" text-anchor="middle" font-size="10" fill="#33415c">${g.Fc} দ্রবণ</text>`;
+ o+=`<rect x="${n>=1?112:110}" y="60" width="${n>=1?10:14}" height="190" fill="${g.pa}" stroke="#0004"/><rect x="301" y="60" width="14" height="190" fill="${g.pc}" stroke="#0004"/>${n>=2?`<rect x="296" y="120" width="24" height="130" rx="3" fill="${g.pc}" stroke="#0004" opacity=".85"/>`:""}<text x="112" y="53" text-anchor="middle" font-size="10" font-weight="700" fill="#b8321f">${g.a} অ্যানোড (−)</text><text x="308" y="53" text-anchor="middle" font-size="10" font-weight="700" fill="#1d4fb0">${g.c} ক্যাথোড (+)</text>`;
+ o+=`<path d="M112 60V30H190M230 30H308V60" fill="none" stroke="#6b7690" stroke-width="3"/><circle cx="210" cy="30" r="16" fill="${on?"#ffe45c":"#e8ecf3"}" stroke="#6b7690" stroke-width="3"/>${on?'<circle cx="210" cy="30" r="24" fill="#ffe45c" opacity=".35"/>':""}`;
+ if(n>=2)o+=`<text x="210" y="9" text-anchor="middle" font-size="10" font-weight="700" fill="#33415c">E° = ${g.E} V</text>`;
+ o+=br?`<path d="M150 180V105Q150 95 160 95H260Q270 95 270 105V180" fill="none" stroke="#7a8aa8" stroke-width="12"/><path d="M150 180V105Q150 95 160 95H260Q270 95 270 105V180" fill="none" stroke="#dfe7f7" stroke-width="7"/><text x="210" y="88" text-anchor="middle" font-size="10" font-weight="700" fill="#33415c">লবণ সেতু (${g.brs})</text>`:`<path d="M150 180V105Q150 95 160 95H260Q270 95 270 105V180" fill="none" stroke="#b9c2d3" stroke-width="2" stroke-dasharray="5 5"/><text x="210" y="88" text-anchor="middle" font-size="10" fill="#c0392b">লবণ সেতু নেই ✗</text>`;
+ if(n>=1)for(let i=0;i<3;i++)o+=ion(92,185+i*25,g.Ia,"#e8742a",-14,i*6-6,2.2+i*.4,9);
+ if(n>=2)for(let i=0;i<3;i++)o+=ion(340,190+i*25,g.Ic,"#2f8fd8",-24,i*5,2.4+i*.3,9);
+ if(n>=1&&!(!br&&n>=3))for(let i=0;i<5;i++)o+=`<circle r="4" fill="#2f6fde"><animateMotion dur="5s" begin="${i}s" repeatCount="indefinite" path="${wire}"/></circle>`;
+ // সেতু থাকলে: K⁺ ক্যাথোডের দিকে, সেতুর অ্যানায়ন অ্যানোডের দিকে যায়
+ if(n>=3&&br){for(let i=0;i<3;i++)o+=ion(262,205+i*22,"K⁺","#8e5fd0",50,0,3+i*.4,9)+ion(158,205+i*22,g.bi,"#2f9d6b",-45,0,3+i*.4,9)}
+ // সেতু না থাকলে: বাঁয়ে (+) ও ডানে (−) চার্জ জমে যায়
+ if(n>=3&&!br)o+=`<text x="45" y="235" font-size="18" fill="#e8742a" font-weight="700">⊕ ⊕ ⊕</text><text x="320" y="235" font-size="18" fill="#2f6fde" font-weight="700">⊖ ⊖ ⊖</text>`;
+ return o}
+
+/* ---------- নিজে বানাও : যেকোনো ক্যাটায়ন + অ্যানায়ন ---------- */
+// ---- গণিতের ছোট সহায়ক ----
+// gcd = গ.সা.গু; sb = সংখ্যাকে নিচের অঙ্কে (₂, ₃) রূপান্তর
+const gcd=(a,b)=>b?gcd(b,a%b):a;
+const sb=n=>String(n).replace(/\d/g,d=>"₀₁₂₃₄₅₆₇₈₉"[d]);
+// ক্যাটায়ন/অ্যানায়নের বাংলা নাম (ড্রপডাউনে দেখায়)
+const CN=["লিথিয়াম","পটাশিয়াম","ক্যালসিয়াম","সোডিয়াম","ম্যাগনেসিয়াম","অ্যালুমিনিয়াম","জিংক","আয়রন","টিন","লেড","হাইড্রোজেন (এসিড)","কপার","সিলভার","স্বর্ণ (গোল্ড)"];
+// C = ক্যাটায়ন তালিকা [চিহ্ন, ধাতু, চার্জ] — সক্রিয়তা সারির ক্রমে (H⁺ লেডের পরে)
+const C=[["Li⁺","Li",1],["K⁺","K",1],["Ca²⁺","Ca",2],["Na⁺","Na",1],["Mg²⁺","Mg",2],["Al³⁺","Al",3],["Zn²⁺","Zn",2],["Fe²⁺","Fe",2],["Sn²⁺","Sn",2],["Pb²⁺","Pb",2],["H⁺","H",1],["Cu²⁺","Cu",2],["Ag⁺","Ag",1],["Au³⁺","Au",3]].map(([s,m,a],i)=>({s,m,a,n:CN[i]}));
+const AN=["ফ্লোরাইড","ক্লোরাইড","ব্রোমাইড","আয়োডাইড","অক্সাইড","নাইট্রেট","সালফেট","হাইড্রক্সাইড"];
+// A = অ্যানায়ন তালিকা [চিহ্ন, মৌল, চার্জ, গ্যাস]; poly = বহু-পরমাণুক (NO₃, SO₄, OH) — সূত্রে বন্ধনী লাগে
+const A=[["F⁻","F",1,"F₂"],["Cl⁻","Cl",1,"Cl₂"],["Br⁻","Br",1,"Br₂"],["I⁻","I",1,"I₂"],["O²⁻","O",2,"O₂"],["NO₃⁻","NO₃",1,""],["SO₄²⁻","SO₄",2,""],["OH⁻","OH",1,""]].map(([s,x,b,g],i)=>({s,x,b,g,n:AN[i],poly:/[₃₄]/.test(x)||x=="OH"}));
+// MC = ধাতুর রং, GC = গ্যাসের রং (ছবির জন্য)
+const MC={Li:"#d5d9e0",K:"#d8cfe8",Ca:"#e4e4e0",Na:"#c9ced8",Mg:"#d9dde3",Al:"#c7ccd6",Zn:"#b7c0cc",Fe:"#8b8f99",Sn:"#cfd3da",Pb:"#8d93a0",Cu:"#c77b3b",Ag:"#eef1f6",Au:"#e6c34a"};
+const GC={"F₂":"#f3f7a8","Cl₂":"#cfe84a","Br₂":"#c0502b","I₂":"#8a5bc9","O₂":"#e3f1ff","H₂":"#e9f2ff"};
+// ABOVE = সারিতে H⁺ এর ওপরের ধাতু — জলীয় দ্রবণে এদের ক্যাটায়ন নয়, H⁺ ই আগে চার্জমুক্ত হয়
+const ABOVE=["Li","K","Ca","Na","Mg","Al","Zn","Fe","Sn","Pb"];
+// INS = পানিতে অদ্রবণীয় যৌগ (জলীয় দ্রবণ হয় না) — এগুলো “সম্ভব নয়” বলে দেখায়
+const INS={"Ag⁺":["Cl⁻","Br⁻","I⁻","SO₄²⁻"],"Pb²⁺":["F⁻","Cl⁻","Br⁻","I⁻","SO₄²⁻"],"Ca²⁺":["F⁻","SO₄²⁻"],"Mg²⁺":["F⁻"],"Zn²⁺":["F⁻"],"Cu²⁺":["F⁻"],"Al³⁺":["F⁻"],"Fe²⁺":["F⁻"],"Li⁺":["F⁻"]};
+["Mg²⁺","Al³⁺","Zn²⁺","Fe²⁺","Sn²⁺","Pb²⁺","Cu²⁺","Ag⁺"].forEach(k=>INS[k]=[...(INS[k]||[]),"OH⁻"]);
+// যৌগের সূত্র তৈরি: Mg + Cl → MgCl₂, Al + SO₄ → Al₂(SO₄)₃ (p, q = সূত্রের নিচের সংখ্যা)
+const fm=(c,x,p,q)=>(p>1?c.m+sb(p):c.m)+(q>1?(x.poly?"("+x.x+")"+sb(q):x.x+sb(q)):x.x);
+// সমীকরণ লেখা: [[সহগ, সূত্র],...] → "২A + B → C"; সব সহগকে গ.সা.গু. দিয়ে ভাগ করে ছোট করে
+const eqn=(L,R)=>{const g=[...L,...R].reduce((a,t)=>gcd(a,t[0]),0),f=t=>(t[0]/g>1?t[0]/g:"")+t[1];return L.map(f).join(" + ")+" → "+R.map(f).join(" + ")};
+// F = “নিজে করো”-র বর্তমান নির্বাচন (ci/ai = ক্যাটায়ন/অ্যানায়ন নম্বর, st = গলিত/জলীয়, conc = গাঢ়, act = সক্রিয় অ্যানোড)
+let F={ci:3,ai:1,st:"aq",conc:"1",act:"0"};
+// ===== “নিজে করো”-র মূল নিয়ম-ইঞ্জিন =====
+// cat = ক্যাথোডে কী হবে: "M" (ধাতু জমে) | "H" (H₂ গ্যাস)
+// an  = অ্যানোডে কী হবে: "X" (হ্যালোজেন/O₂ গ্যাস, গলিত অবস্থা) | "O" (OH⁻ → O₂) | "D" (অ্যানোড ধাতু ক্ষয়)
+// সমীকরণ মেলানো: ১২টি ইলেকট্রন ধরে সহগ বের করে (১২ এর ভাজক ১, ২, ৩ চার্জের সবগুলোকে পূর্ণসংখ্যা রাখে)
+function build(f){
+ const c=C[+f.ci],x=A[+f.ai],aq=f.st=="aq",g=gcd(c.a,x.b),p=x.b/g,q=c.a/g,Fo=fm(c,x,p,q),T=12;
+ const dis=`${Fo} → ${p>1?p:""}${c.s} + ${q>1?q:""}${x.s}`+(aq?"  ;  H₂O ⇌ H⁺ + OH⁻":"");
+ // ---- অবৈধ সমন্বয় আটকানো (ভুল ফল যেন না আসে) ----
+ if(!aq&&c.m=="H")return{err:"H⁺ যুক্ত যৌগ (এসিড, যেমন HCl, H₂SO₄) গলিত অবস্থায় আয়নিত হয় না। এসিডের তড়িৎ বিশ্লেষণ শুধু জলীয় দ্রবণে হয়।"};
+ if(aq&&x.s=="O²⁻")return{err:"অক্সাইড (O²⁻) পানিতে দ্রবীভূত আয়ন হিসেবে থাকে না — পানির সাথে বিক্রিয়া করে হাইড্রক্সাইড হয় বা অদ্রবণীয় থাকে। অক্সাইডের তড়িৎ বিশ্লেষণ শুধু গলিত অবস্থায়।"};
+ if(!aq&&x.poly)return{err:"গলিত নাইট্রেট, সালফেট বা হাইড্রক্সাইডের তড়িৎ বিশ্লেষণ পাঠ্যবইয়ে আসে না (গলার আগেই ভেঙে যেতে পারে)। গলিত অবস্থায় হ্যালাইড (F⁻, Cl⁻, Br⁻, I⁻) বা অক্সাইড (O²⁻) নাও।"};
+ if(c.s=="Cu²⁺"&&x.s=="I⁻")return{err:"Cu²⁺ ও I⁻ একসাথে স্থিতিশীল যৌগ গঠন করে না (CuI তৈরি হয় ও I₂ মুক্ত হয়)।"};
+ if(c.s=="H⁺"&&x.s=="OH⁻")return{err:"H⁺ আর OH⁻ মিলে শুধু পানি (H₂O) হয়। পানির তড়িৎ বিশ্লেষণ দেখতে H₂SO₄ বা NaOH দ্রবণ নাও।"};
+ if(c.s=="Au³⁺"&&!(aq&&x.s=="Cl⁻"))return{err:"Au³⁺ এর যৌগ হিসেবে পাঠ্যে শুধু AuCl₃ এর জলীয় দ্রবণ আসে। অন্য সমন্বয় স্থিতিশীল নয় বা গলার আগেই ভেঙে যায়।"};
+ if(aq&&(INS[c.s]||[]).includes(x.s))return{err:`${Fo} পানিতে প্রায় অদ্রবণীয় (বা খুব অল্প দ্রবণীয়), তাই এর জলীয় দ্রবণ হয় না। এটি গলিত অবস্থায় বিশ্লেষণ করা যায়।`};
+ // সক্রিয় অ্যানোড শুধু Cu/Ag-র ক্ষেত্রে (সারিতে H এর নিচে)
+ const act=aq&&f.act=="1"&&(c.m=="Cu"||c.m=="Ag");
+ let cat,an;
+ // ---- নিয়ম: কে আগে চার্জমুক্ত হবে ----
+ // গলিত: ক্যাটায়ন → ধাতু, অ্যানায়ন → গ্যাস। জলীয়: সারি ও ঘনমাত্রা দেখে সিদ্ধান্ত
+ if(!aq){cat="M";an="X"}else if(act){cat="M";an="D"}
+ else{cat=(c.s=="H⁺"||ABOVE.includes(c.m))?"H":"M";an=(["Cl","Br","I"].includes(x.x)&&(x.x!="Cl"||f.conc=="1"))?"X":"O"}
+ // ---- ফল-অবজেক্ট বানানো: সমীকরণ (ce/ae), ক্যাথোড co, অ্যানোড ao ----
+ const mcol=MC[c.m]||"#c9ced8",hyd=c.a>1?`${c.m}(OH)${sb(c.a)}`:`${c.m}OH`,acid=x.b>1?`H${sb(x.b)}${x.x}`:`H${x.x}`;
+ const ce=cat=="M"?`${c.s} + ${c.a>1?c.a:""}e⁻ → ${c.m}`:"2H⁺ + 2e⁻ → H₂";
+ const ae=an=="X"?(x.b==1?`2${x.s} → ${x.g} + 2e⁻`:`2${x.s} → ${x.g} + 4e⁻`):an=="O"?"4OH⁻ → O₂ + 2H₂O + 4e⁻":`${c.m} → ${c.s} + ${c.a>1?c.a:""}e⁻`;
+ const hO=cat=="H"&&an=="O";
+ let cw,aw,co,ao;
+ if(cat=="M"){co={t:"m",col:mcol,lb:act?`বিশুদ্ধ ${c.m} জমে`:`${c.m} ধাতু জমে`,eq:ce,
+  why:!aq?`গলিত অবস্থায় ${c.s} ছাড়া অন্য ক্যাটায়ন নেই (পানি নেই), তাই ${c.s}-ই ইলেকট্রন নেয়। ক্যাটায়ন বিজারিত হয়।`+(c.m=="Al"?" (বাস্তবে Al₂O₃ কে ক্রায়োলাইটে গলিয়ে করা হয়।)":""):act?`দ্রবণের ${c.s} ইলেকট্রন নিয়ে ${c.m} হয়ে ক্যাথোডে জমে।`:`${c.s} আর H⁺ (পানি থেকে) দুটোই আছে। সারিতে ${c.s} নিচে (H⁺ এর নিচে), তাই ${c.s} আগে ইলেকট্রন নিয়ে ${c.m} ধাতু হয়।`};cw=c.s}
+ else{co={t:"g",col:GC["H₂"],lb:"H₂ গ্যাস",r:hO?6:4,eq:ce,
+  why:c.s=="H⁺"?"দ্রবণে ক্যাটায়ন শুধু H⁺ (এসিড ও পানি থেকে), তাই H⁺ ইলেকট্রন নিয়ে H₂ হয়।":`${c.s} আর H⁺ (পানি থেকে) দুটোই আছে। সারিতে H⁺ নিচে (${c.s} ওপরে), তাই H⁺ আগে চার্জমুক্ত হয়।`+(["Zn","Fe","Sn","Pb"].includes(c.m)?" (পাঠ্যবইয়ের সারির নিয়ম অনুযায়ী। বাস্তবে এই ধাতু ক্যাথোডে জমতেও পারে।)":"")};cw="H⁺"}
+ if(an=="X"){ao={t:"g",col:GC[x.g],lb:x.g+(x.s=="Br⁻"?" (লালচে-বাদামী বাষ্প)":x.s=="I⁻"?" (বেগুনি বাষ্প)":" গ্যাস"),r:4,eq:ae,
+  why:!aq?`${x.s} ছাড়া অন্য অ্যানায়ন নেই। অ্যানায়ন অ্যানোডে ইলেকট্রন ছেড়ে জারিত হয়।`:x.s=="Cl⁻"?"Cl⁻ আর OH⁻ দুটোই আছে। দ্রবণ গাঢ়, তাই Cl⁻ এর ঘনমাত্রা বেশি। ঘনমাত্রার প্রভাব সারির চেয়ে বেশি কার্যকর — Cl⁻ আগে চার্জমুক্ত হয়।":`${x.s} খুব সহজে জারিত হয়, তাই ${x.g} বের হয়। (পাঠ্যের সারিতে OH⁻ নিচে থাকলেও বাস্তবে ${x.g}-ই পাওয়া যায়।)`};aw=x.s}
+ else if(an=="O"){ao={t:"g",col:GC["O₂"],lb:"O₂ গ্যাস",r:3,eq:ae,
+  why:x.s=="OH⁻"?"দ্রবণে অ্যানায়ন শুধু OH⁻ (ক্ষার ও পানি থেকে), তাই OH⁻ ইলেকট্রন ছেড়ে O₂ হয়।":x.s=="Cl⁻"?"দ্রবণ লঘু, তাই Cl⁻ এর ঘনমাত্রা কম। সারিতে OH⁻ নিচে, তাই OH⁻ আগে চার্জমুক্ত হয়। (দ্রবণ গাঢ় হলে Cl₂ বের হতো।)":`${x.s} আর OH⁻ দুটোই আছে। সারিতে OH⁻ নিচে, তাই OH⁻ আগে চার্জমুক্ত হয়; ${x.s} দ্রবণে থেকে যায়।`};aw="OH⁻"}
+ else{ao={t:"d",col:mcol,lb:`অ্যানোডের ${c.m} ক্ষয়`,eq:ae,why:`অ্যানোড ${c.m} ধাতুর তৈরি। সক্রিয় ধাতব অ্যানোড নিজেই ইলেকট্রন ছেড়ে ${c.s} হয়ে দ্রবণে যায়; কোনো অ্যানায়ন চার্জমুক্ত হয় না।`};aw=c.m}
+ // ---- সামগ্রিক সমীকরণ, পাত্রে কী থাকে (rest), ছোট রূপ (rs) ----
+ let tot,rest,rs;const nX=T/(2*x.b),u=T*g/(c.a*x.b);
+ if(an=="D"){tot=`${c.m} (অ্যানোড) → ${c.m} (ক্যাথোড)`;rest=`${Fo} দ্রবণ আগের মতোই থাকে। অ্যানোড ছোট হয়, ক্যাথোড মোটা হয়।`;rs=`${Fo} দ্রবণ (একই)`}
+ else if(cat=="M"&&an=="X"){tot=eqn([[u,Fo]],[[T/c.a,c.m],[nX,x.g]]);rest=aq?`${Fo} ক্রমে শেষ হয়ে যায়; পাত্রে শুধু পানি থাকে।`:"কিছুই অবশিষ্ট থাকে না — পুরো যৌগ ভেঙে ধাতু ও গ্যাস হয়।";rs=aq?"পানি (লবণ ক্রমে শেষ)":"কিছুই থাকে না"}
+ else if(cat=="H"&&an=="X"){
+  if(c.s=="H⁺"){tot=eqn([[2,Fo]],[[1,"H₂"],[1,x.g]]);rest=`${Fo} ক্রমে শেষ হয়ে যায়; পাত্রে শুধু পানি থাকে।`;rs="পানি (এসিড শেষ)"}
+  else{tot=eqn([[T/q,Fo],[12,"H₂O"]],[[T/c.a,hyd],[6,"H₂"],[nX,x.g]]);const ins=["Mg","Al","Zn","Fe","Sn","Pb"].includes(c.m);
+   rest=`${c.s} ও OH⁻ থেকে যায় → ${hyd} তৈরি হয়।`+(ins?` (${hyd} পানিতে অদ্রবণীয়, তলানি হিসেবে পড়ে থাকে)`:c.m=="Ca"?` (${hyd} অল্প দ্রবণীয়)`:"");rs=hyd+(ins?" (তলানি)":" দ্রবণ")}}
+ else if(cat=="M"&&an=="O"){tot=eqn([[u,Fo],[6,"H₂O"]],[[T/c.a,c.m],[3,"O₂"],[T/x.b,acid]]);rest=`H⁺ ও ${x.s} থেকে যায় → ${acid} তৈরি হয়।`+(acid=="H₂SO₄"?" (H₂SO₄ একটি নিরুদক — পানি শোষক।)":"");rs=`${acid} দ্রবণ`}
+ else{tot="2H₂O → 2H₂ + O₂";rest=c.s=="H⁺"?`${Fo} (এসিড) থেকে যায় — শুধু পানি ভাঙে। (H₂ : O₂ = ২ : ১)`:`${Fo} দ্রবণে একই থাকে — শুধু পানি ভাঙে। (H₂ : O₂ = ২ : ১)`;rs=`${Fo} (একই)`;if(c.m=="Ca"&&x.s=="OH⁻")rest+=" (Ca(OH)₂ পানিতে অল্প দ্রবণীয়)"}
+ // ছবির রং ও আয়ন-তালিকা ঠিক করে ফল ফেরত দেয়
+ const liq=!aq?"#ffd9a8":c.m=="Cu"?"#8fc4f0":c.m=="Fe"?"#cfe9d0":"#e3eef6";
+ const ions=!aq||act?[c.s,x.s]:[...new Set([c.s,"H⁺",x.s,"OH⁻"])];
+ return{nm:`${Fo} (${aq?"জলীয় দ্রবণ":"গলিত"})`,liq,dis,ions,cw,aw,al:act?`${c.m} পাত (সক্রিয়)`:"গ্রাফাইট",cl:act?`${c.m} দণ্ড`:"গ্রাফাইট",
+  il:aq?(act?`${c.s} , ${x.s}`:`${ions.join(" , ")}  (পানি থেকে H⁺, OH⁻)`):`${c.s} , ${x.s}  (পানি নেই)`,
+  c:co,a:ao,tot,rest,rs,sum:`${Fo}-এর ${aq?"জলীয় দ্রবণে":"গলিত অবস্থায়"} : ক্যাথোডে ${co.lb}, অ্যানোডে ${ao.lb}। পাত্রে থাকে : ${rs}।`};
+}
+// cur() = এখন কোন ইলেক্ট্রোলাইট দেখানো হচ্ছে (প্রিসেট নাকি “নিজে করো”)
+const cur=()=>pi<P.length?P[pi]:build(F);
+// “নিজে করো”-র ড্রপডাউন ফর্ম (ক্যাটায়ন, অ্যানায়ন, অবস্থা, গাঢ়/লঘু, অ্যানোড)
+function custUI(){
+ const sel=(f,o)=>`<select data-f="${f}">${o.map(([v,t])=>`<option value="${v}"${String(F[f])==String(v)?" selected":""}>${t}</option>`).join("")}</select>`;
+ const cc=C[+F.ci],xx=A[+F.ai],aq=F.st=="aq";
+ return`<div class="cust"><label>ক্যাটায়ন ${sel("ci",C.map((c,i)=>[i,c.s+" "+c.n]))}</label><label>অ্যানায়ন ${sel("ai",A.map((x,i)=>[i,x.s+" "+x.n]))}</label><label>অবস্থা ${sel("st",[["m","গলিত"],["aq","জলীয় দ্রবণ"]])}</label>${aq&&xx.s=="Cl⁻"?`<label>দ্রবণ ${sel("conc",[["1","গাঢ়"],["0","লঘু"]])}</label>`:""}${aq&&(cc.m=="Cu"||cc.m=="Ag")?`<label>অ্যানোড ${sel("act",[["0","গ্রাফাইট (নিষ্ক্রিয়)"],["1",cc.m+" (সক্রিয়)"]])}</label>`:""}</div>`}
+
+/* ---------- ট্যাব ও ইঞ্জিন ---------- */
+// ===== অবস্থা (state) =====
+// k = বর্তমান ট্যাব (০/১/২), n = বর্তমান ধাপ, pi = বেছে নেওয়া প্রিসেট (P.length হলে “নিজে করো”)
+// br = লবণ সেতু আছে কি না, gm = লবণ সেতু ট্যাবে “নিজে করো” চালু কি না, G = সেখানে বেছে নেওয়া ধাতু/সেতু
+let k=0,n=0,pi=0,br=true,gm=false,G={m1:"Zn",m2:"Cu",br:"KCl"};
+// gcfg() = লবণ সেতু ট্যাবের চলতি কোষ (ডিফল্ট Zn|Cu, KCl সেতু; “নিজে করো” চালু থাকলে বেছে নেওয়া ধাতু)
+const gcfg=()=>gm?gbuild(G.m1,G.m2,G.br):gbuild("Zn","Cu","KCl");
+// TABS = তিনটি ট্যাব। প্রতিটির: tab = নাম, sum() = সামারি, steps() = ধাপের তালিকা, scene() = ছবির SVG
+const TABS=[
+{tab:"তড়িৎ বিশ্লেষণ",sum:()=>`<b>ঘটনাটা কী?</b> বিদ্যুৎ চালিয়ে কোনো যৌগকে ভেঙে ফেলাই তড়িৎ বিশ্লেষণ। ওপরের বাটন থেকে ইলেক্ট্রোলাইট বদলে দেখো — কোন আয়ন আগে চার্জমুক্ত হবে তা নির্ভর করে <b>সারিতে অবস্থান</b>, <b>ঘনমাত্রা</b> আর <b>ইলেকট্রোডের ধরনের</b> ওপর। <br><b>★ “নিজে করো” বাটনে</b> যেকোনো আয়ন জোড়া মিলিয়ে ফল যাচাই করো।<br><b>মনে রাখো :</b> ক্যাটায়ন (K⁺, Na⁺, Ca²⁺ ...) ক্যাথোডে বিজারিত হয়, আর অ্যানায়ন (O²⁻, Cl⁻, F⁻ ...) অ্যানোডে জারিত হয়।<br><b>এই ইলেক্ট্রোলাইটে:</b> ${cur().sum||""}`,steps:()=>{const p=cur();return p.err?[{t:"এই সমন্বয় নেওয়া যায় না",m:p.err,c:"অন্য ক্যাটায়ন, অ্যানায়ন বা অবস্থা বেছে নাও।",y:p.err,st:"সমন্বয় সম্ভব নয়"}]:stepsE(p)},scene:()=>{const p=cur();return p.err?`<rect x="63" y="130" width="294" height="137" fill="#e3eef6"/><path d="M60 100V270H360V100" fill="none" stroke="#51607f" stroke-width="6"/><text x="210" y="200" text-anchor="middle" font-size="14" font-weight="700" fill="#b8321f">এই সমন্বয় সম্ভব নয়</text>`:sceneE(p,n)}},
+{tab:"শুষ্ক কোষ",sum:()=>`<b>ঘটনাটা কী?</b> টর্চ বা রিমোটের ব্যাটারি হলো শুষ্ক কোষ। ভেতরে জিংক ক্ষয় হয়ে ইলেকট্রন দেয়, সেই ইলেকট্রন তার বেয়ে কার্বন দণ্ডে যায় আর বাল্ব জ্বালায়। রাসায়নিক শক্তি এভাবে বিদ্যুৎ হয়ে যায়।`,steps:()=>STD,scene:()=>sceneD(n)},
+{tab:"লবণ সেতু",sum:()=>`<b>ঘটনাটা কী?</b> ডেনিয়েল কোষে Zn ও Cu আলাদা পাত্রে থাকে। ইলেকট্রন তার বেয়ে যায়, কিন্তু দুই দ্রবণে চার্জ জমে যেতে চায়। লবণ সেতু আয়ন পাঠিয়ে সেই চার্জ সমান রাখে। কমলা <b>“✏️ নিজে করো”</b> বাটনে যেকোনো দুই ধাতু বেছে নিজের কোষ বানাও, আর বাটন চেপে সেতু সরিয়ে দেখো কী হয়।`,steps:()=>{const g=gcfg();return g.err?[{t:"এই কোষ হয় না",m:g.err,c:"দুটি আলাদা ধাতু বেছে নাও।",y:g.err,st:"কোষ সম্ভব নয়"}]:stepsG(g,br)},scene:()=>{const g=gcfg();return g.err?`<path d="M30 130V270H180V130M240 130V270H390V130" fill="none" stroke="#51607f" stroke-width="5"/><text x="210" y="200" text-anchor="middle" font-size="14" font-weight="700" fill="#b8321f">এই কোষ সম্ভব নয়</text>`:sceneG(n,br,g)}}];
+// লবণ সেতুর “নিজে করো” ফর্ম (ধাতু ১, ধাতু ২, সেতুর দ্রবণ)
+function gUI(){const sel=(f,o)=>`<select data-g="${f}">${o.map(([v,t])=>`<option value="${v}"${G[f]==v?" selected":""}>${t}</option>`).join("")}</select>`;const mo=Object.keys(MT).map(m=>[m,m+" — "+MT[m].bn]);return`<div class="cust"><label>ধাতু ১ ${sel("m1",mo)}</label><label>ধাতু ২ ${sel("m2",mo)}</label><label>লবণ সেতুর দ্রবণ ${sel("br",[["KCl","KCl"],["KNO₃","KNO₃"]])}</label></div>`}
+// বাম কার্ডের ওপরের বাটন/ড্রপডাউন আঁকে (ট্যাব অনুযায়ী আলাদা)
+function ctl(){
+ const c=$("ctl");
+ if(k==0)c.innerHTML=`<button class="mine${pi==P.length?" on":""}" data-p="${P.length}">✏️ নিজে করো — যেকোনো আয়ন বেছে পরীক্ষা করো</button>`+(pi==P.length?custUI():"")+P.map((p,i)=>`<button class="${i==pi?"on":""}" data-p="${i}">${p.nm}</button>`).join("");
+ else if(k==2)c.innerHTML=`<button class="mine${gm?" on":""}" data-m="1">✏️ নিজে করো — যেকোনো দুই ধাতু বেছে কোষ বানাও</button>`+(gm?gUI():"")+`<button class="on" data-b="1">${br?"লবণ সেতু সরাও ✂":"লবণ সেতু বসাও ✓"}</button>`;
+ else c.innerHTML="";
+}
+// ডান অংশের নিচের কার্ড: এক নজরে টেবিল, নিয়ম, সারি, ব্যবহার (ট্যাব অনুযায়ী)
+function extra(){
+ if(k==0){const p0=cur(),p=p0.err?{ions:[]}:p0,S=s=>`<i class="${p.ions.includes(s)?"in":""} ${s==p.cw||s==p.aw?"win":""}">${s}</i>`;
+  return`<details class="card ex" open><summary>এক নজরে : কোথায় কী উৎপন্ন হয়, পাত্রে কী পড়ে থাকে</summary><table><tr><th>ইলেক্ট্রোলাইট</th><th>ক্যাথোডে (−)</th><th>অ্যানোডে (+)</th><th>পাত্রে পড়ে থাকে</th></tr>${P.map((q,x)=>`<tr${x==pi?' style="background:#fff6dd;color:#4a3500"':""}><td>${q.nm}</td><td>${q.c.lb}</td><td>${q.a.lb}</td><td>${q.rs}</td></tr>`).join("")}${pi==P.length&&!p0.err?`<tr style="background:#fff6dd;color:#4a3500"><td>${p0.nm} (তোমার বানানো)</td><td>${p0.c.lb}</td><td>${p0.a.lb}</td><td>${p0.rs}</td></tr>`:""}</table>
+<p style="font-size:.9rem;margin:8px 0 0"><b>গ্যাসগুলো চেনার উপায় :</b> <b>Cl₂</b> হলুদ-সবুজ গ্যাস, ভেজা নীল লিটমাস পেপার ধরলে বর্ণ বদলে যায়। <b>H₂</b> জ্বলন্ত কাঠি কাছে নিলে “পপ” শব্দে জ্বলে। <b>O₂</b> জ্বলন্ত কাঠি আরও উজ্জ্বল করে। পানির তড়িৎ বিশ্লেষণে H₂ : O₂ = ২ : ১।</p></details>
+<div class="card ser"><b>কোন আয়ন আগে চার্জমুক্ত হবে? তিনটি নিয়ম</b>১. <b>সারিতে অবস্থান :</b> সারিতে যে আয়ন নিচে, সে আগে চার্জমুক্ত হয় (যেমন Na⁺ এর আগে H⁺)।<br>২. <b>ঘনমাত্রা :</b> একই সারির আয়নের মধ্যে বা দ্রবণ গাঢ় হলে ঘনমাত্রার প্রভাব সারির চেয়ে বেশি কার্যকর (গাঢ় NaCl-এ OH⁻ এর আগে Cl⁻)।<br>৩. <b>ইলেকট্রোডের ধরন :</b> অ্যানোড সক্রিয় ধাতুর (Cu, Ag) হলে সে নিজেই ক্ষয় হয়, কোনো অ্যানায়ন চার্জমুক্ত হয় না।<br><i style="background:none;padding:0">তীব্র তড়িৎ বিশ্লেষ্য (NaCl, CuSO₄, H₂SO₄) গলিত বা দ্রবণে সম্পূর্ণ আয়নিত থাকে। মৃদু তড়িৎ বিশ্লেষ্য (H₂O, CH₃COOH) খুব অল্প আয়নিত হয়।</i></div>
+<div class="card ser"><b>সক্রিয়তা সারি (নিচের আয়ন আগে চার্জমুক্ত হয়) — এখনকার আয়ন নীল, বিজয়ী আয়ন হলুদ</b><b>ক্যাটায়ন (ক্যাথোডে)</b>${CAT.map(S).join("")}<b>অ্যানায়ন (অ্যানোডে)</b>${ANI.map(S).join("")}</div>
+<details class="card ex"><summary>তড়িৎ বিশ্লেষণের ব্যবহার</summary><ol style="margin:8px 0 0;padding-left:22px"><li>মূল্যবান যৌগ তৈরি (NaOH, Cl₂, H₂ ইত্যাদি)।</li><li>আকরিক থেকে সক্রিয় ধাতু নিষ্কাশন (Na, K, Mg, Al)।</li><li>অশুদ্ধ ধাতু বিশুদ্ধ করা (Cu, Zn, Al)।</li><li>ধাতুর ক্ষয় বা মরিচা রোধ (লোহার ওপর দস্তার প্রলেপ = গ্যালভানাইজিং)।</li><li>ইলেকট্রোপ্লেটিং : এক ধাতুর ওপর অন্য ধাতুর প্রলেপ দিয়ে উজ্জ্বলতা বাড়ানো (চামচে Ag)।</li></ol></details>`}
+ if(k==2)return`<details class="card ex"><summary>ধাতুর সারি ও আদর্শ বিভব (E°)</summary>${etab()}</details><details class="card ex"><summary>গ্যালভানিক কোষ বনাম তড়িৎ বিশ্লেষ্য কোষ</summary><table><tr><th></th><th>গ্যালভানিক কোষ</th><th>তড়িৎ বিশ্লেষ্য কোষ</th></tr><tr><td>শক্তি</td><td>রাসায়নিক → বিদ্যুৎ</td><td>বিদ্যুৎ → রাসায়নিক</td></tr><tr><td>ব্যাটারি</td><td>লাগে না</td><td>বাইরে থেকে লাগে</td></tr><tr><td>অ্যানোড / ক্যাথোড</td><td>অ্যানোড (−) , ক্যাথোড (+)</td><td>অ্যানোড (+) , ক্যাথোড (−)</td></tr><tr><td>বিক্রিয়া</td><td>স্বতঃস্ফূর্ত</td><td>বিদ্যুৎ দিয়ে ঘটানো</td></tr><tr><td>পাত্র</td><td>দুটি আলাদা পাত্র</td><td>সাধারণত একটি পাত্র</td></tr></table></details>`;
+ return"";
+}
+// render() = পুরো পাতা নতুন করে আঁকে: ট্যাব, বাটন, ছবি, স্ট্যাটাস, ধাপের কার্ড। যেকোনো পরিবর্তনের পর এটাই ডাকা হয়
+function render(){
+ const T=TABS[k],S=T.steps(),p=$("panel");
+ $("tabs").innerHTML=TABS.map((t,i)=>`<button class="${i==k?"on":""}" data-i="${i}">${bn(i+1)}. ${t.tab}</button>`).join("");
+ ctl();$("sum").innerHTML=T.sum();$("extra").innerHTML=extra();
+ $("sv").innerHTML=T.scene();$("st").textContent=S[n].st;
+ $("dots").innerHTML=S.map((_,i)=>`<span class="${i<=n?"on":""}"></span>`).join("");
+ p.innerHTML=S.slice(0,n+1).map((s,i)=>`<div class="step${i==n?" cur":""}"><h3><b>${bn(i+1)}</b>${s.t}</h3><pre>${s.m}</pre><div class="co">${s.c}</div><div class="ez"><b>সহজ কথায়:</b> ${s.y}</div></div>`).join("");
+ $("next").disabled=n==S.length-1;$("prev").disabled=n==0;$("next").textContent=n==S.length-1?"শেষ ✓":"পরের ধাপ →";
+ p.lastChild.scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+// go(+১/−১) = পরের/আগের ধাপে যাওয়া (প্রথম ও শেষ ধাপ পেরোয় না)
+const go=d=>{n=Math.max(0,Math.min(TABS[k].steps().length-1,n+d));render()};
+// ===== ইভেন্ট =====
+// বাটন ও ছবিতে ক্লিক/ট্যাপ = পরের/আগের ধাপ
+$("next").onclick=()=>go(1);$("prev").onclick=()=>go(-1);$("reset").onclick=()=>{n=0;render()};$("sv").onclick=()=>go(1);
+// ট্যাব বদলালে প্রথম ধাপ থেকে শুরু
+$("tabs").onclick=e=>{const b=e.target.closest("button");if(b){k=+b.dataset.i;n=0;render()}};
+// ড্রপডাউন বদলালে (“নিজে করো”) অবস্থা সেভ করে আবার আঁকে
+$("ctl").onchange=e=>{const s=e.target.closest("select");if(!s)return;if(s.dataset.g)G[s.dataset.g]=s.value;else F[s.dataset.f]=s.value;n=0;render()};
+// বাটন ক্লিক: প্রিসেট বদল / “নিজে করো” চালু-বন্ধ / লবণ সেতু সরানো-বসানো
+$("ctl").onclick=e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.p!=null){pi=+b.dataset.p;n=0}else if(b.dataset.m!=null){gm=!gm;n=0}else br=!br;render()};
+// কীবোর্ড: → বা স্পেস = পরের ধাপ, ← = আগের ধাপ
+addEventListener("keydown",e=>{if(e.key=="ArrowRight"||e.key==" "){e.preventDefault();go(1)}if(e.key=="ArrowLeft")go(-1)});
+
+// ===== ফোনের জন্য ছোট স্ক্রিপ্ট =====
+// ১) ফোনে (পর্দা ≤৮২০px) “ব্যবহারের নিয়ম” বক্স বন্ধ অবস্থায় শুরু হয়, যাতে ছবি সরাসরি চোখে পড়ে
+if(typeof matchMedia!="undefined"&&matchMedia("(max-width:820px)").matches){const d=document.querySelector&&document.querySelector("details.how");if(d)d.open=false}
+// ২) আটকে-থাকা ব্লকের (.stick) উচ্চতা CSS-এ পাঠানো (--stick-h), যাতে ধাপে স্ক্রল করলে ব্লকের নিচে লেখা লুকিয়ে না যায়
+if(typeof ResizeObserver!="undefined"&&document.querySelector){const sk=document.querySelector(".stick");if(sk)new ResizeObserver(()=>document.documentElement.style.setProperty("--stick-h",sk.offsetHeight+"px")).observe(sk)}
+// প্রথমবার পাতা আঁকা
+render();
+</script>
+</body>
+</html>
